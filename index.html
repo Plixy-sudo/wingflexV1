@@ -140,6 +140,8 @@
         .article-hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; }
         .article-text h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
         .article-text p { font-size: 1.2rem; line-height: 1.8; color: #374151; margin-bottom: 2rem; }
+        .article-text h3 { margin-top: 3rem; margin-bottom: 1rem; font-size: 1.5rem; }
+        .article-text ul { margin-left: 1.5rem; margin-bottom: 2rem; line-height: 1.8; font-size: 1.2rem; color: #374151; }
 
         .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
@@ -451,21 +453,78 @@
         updateTelemetry();
         loop();
 
-        // --- 4. MODAL LOGIC ---
+        // --- 4. MODAL LOGIC (EXPANDED CONTENT) ---
         const articles = [
-            { title: "The Carbon Fiber Revolution", content: "<p>The Wingflex phenomenon...</p>", image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&w=1200&q=80" },
-            { title: "Understanding Load Factor", content: "<p>When pilots talk about pulling Gs...</p>", image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&w=1200&q=80" },
-            { title: "The Ultimate Load Test", content: "<p>Wings are tested to destruction...</p>", image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&w=1200&q=80" }
+            { 
+                title: "The Carbon Fiber Revolution", 
+                tag: "AEROSPACE MATERIALS",
+                image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&w=1200&q=80", 
+                content: `
+                    <p>The "Wingflex" phenomenon is signature to modern aviation, most famously seen in the Boeing 787 Dreamliner and Airbus A350. Unlike older aircraft built primarily from rigid aluminum, these modern jets utilize Carbon-Fiber Reinforced Polymer (CFRP) for more than 50% of their airframe.</p>
+                    
+                    <h3>Why Flexibility Matters</h3>
+                    <p>In the past, engineers designed wings to be as stiff as possible to avoid structural flutter. However, a rigid wing transfers every bump in the air directly to the fuselage, resulting in a rough ride for passengers and high fatigue loads on the wing root.</p>
+                    
+                    <p>Carbon fiber allows engineers to design "anisotropic" properties—meaning the material is strong in one direction but flexible in another. This allows the wing to:</p>
+                    <ul>
+                        <li><strong>Act as a Shock Absorber:</strong> The wing bends upward during turbulence, dampening the energy before it hits the cabin.</li>
+                        <li><strong>Increase Efficiency:</strong> As the wing bends up, it changes the aerodynamic profile, reducing induced drag at cruising altitudes.</li>
+                    </ul>
+                    <p>On the 787, the wingtips can flex upward by over 25 feet (7.6 meters) during extreme testing without structural failure. This elasticity is not a defect; it is a primary safety and comfort feature.</p>
+                ` 
+            },
+            { 
+                title: "Understanding Load Factor", 
+                tag: "NEWTONIAN PHYSICS",
+                image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&w=1200&q=80", 
+                content: `
+                    <p>When an aircraft turns, it must generate enough lift not only to counter gravity but also to create the centripetal force required to change direction. The ratio of this total lift to the aircraft's weight is called the <strong>Load Factor (n)</strong>, measured in Gs.</p>
+                    
+                    <h3>The Math of the Turn</h3>
+                    <p>In a level coordinated turn, the Load Factor is calculated using the bank angle ($\theta$) with the formula:</p>
+                    <p style="background: #f3f4f6; padding: 1rem; border-radius: 8px; font-family: monospace; text-align: center; font-size: 1.2rem;">n = 1 / cos(\theta)</p>
+                    
+                    <h3>Practical Implications</h3>
+                    <ul>
+                        <li><strong>30° Bank:</strong> 1.15 Gs (Standard airliner turn).</li>
+                        <li><strong>45° Bank:</strong> 1.41 Gs (Steep turn).</li>
+                        <li><strong>60° Bank:</strong> 2.00 Gs (You feel twice your weight).</li>
+                        <li><strong>75° Bank:</strong> 3.86 Gs (Approaching human blackout without training).</li>
+                    </ul>
+                    <p>Structurally, this means the wings must support double the weight of the aircraft during a 60-degree bank. If a plane weighs 200,000 lbs, the wings are effectively lifting 400,000 lbs. This is why commercial airliners rarely exceed 30 degrees of bank in normal operations—not because the plane can't handle it, but for passenger comfort and safety margins.</p>
+                ` 
+            },
+            { 
+                title: "The Ultimate Load Test", 
+                tag: "STRUCTURAL SAFETY",
+                image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&w=1200&q=80", 
+                content: `
+                    <p>Before a new aircraft type is certified to fly passengers, it must undergo a brutal torture test known as the Static Strength Test. The most critical part of this is determining the "Ultimate Load."</p>
+                    
+                    <h3>Limit vs. Ultimate</h3>
+                    <p>Regulators (FAA/EASA) define two key thresholds:</p>
+                    <ul>
+                        <li><strong>Limit Load:</strong> The maximum force the aircraft is expected to encounter once in its entire service life (e.g., extreme turbulence).</li>
+                        <li><strong>Ultimate Load:</strong> The Limit Load multiplied by a safety factor of 1.5 (150%). The wing must hold this load for at least 3 seconds without failing.</li>
+                    </ul>
+                    
+                    <h3>The Breaking Point</h3>
+                    <p>In the famous Boeing 777 wing test, engineers used hydraulic pulleys to bend the wings upward. The target was 150%. As the load passed 100%, the wings were bent higher than the fuselage roof. They passed 150% successfully.</p>
+                    <p>To find the true failure point, they kept going. The wings finally snapped at <strong>154%</strong> of the limit load with a sound like a gunshot. This proved the computer models were incredibly accurate, ensuring that even in the worst hurricane imaginable, the wings would remain attached to the plane.</p>
+                ` 
+            }
         ];
         
         const backdrop = document.getElementById('modalBackdrop');
         const mImage = document.getElementById('mImage');
         const mTitle = document.getElementById('mTitle');
+        const mTag = document.getElementById('mTag');
         const mBody = document.getElementById('mBody');
 
         function openModal(index) {
             mImage.src = articles[index].image;
             mTitle.innerText = articles[index].title;
+            mTag.innerText = articles[index].tag;
             mBody.innerHTML = articles[index].content;
             backdrop.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -475,6 +534,7 @@
             document.body.style.overflow = 'auto';
         }
         backdrop.addEventListener('click', (e) => { if(e.target===backdrop) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
