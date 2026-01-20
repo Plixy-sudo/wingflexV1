@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wingflex | Aeroelasticity</title>
+    <title>Wingflex | Flight Physics</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+    
     <style>
         /* --- 1. CORE VARIABLES & RESET --- */
         :root {
@@ -13,17 +15,18 @@
             --text-secondary: #6b7280;
             --accent: #2563eb;
             --accent-glow: rgba(37, 99, 235, 0.15);
+            --danger: #ef4444;
+            --success: #10b981;
             --border: #e5e7eb;
             --radius-sm: 8px;
             --radius-lg: 24px;
             --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-float: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         html { scroll-behavior: smooth; }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -34,15 +37,10 @@
             overflow-x: hidden;
         }
 
-        /* --- 2. ANIMATION KEYFRAMES --- */
+        /* --- 2. ANIMATIONS --- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes scaleReveal {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         /* --- 3. UI COMPONENTS --- */
@@ -73,7 +71,18 @@
             background: black;
         }
 
-        /* --- 4. NAVIGATION (Glassmorphism) --- */
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--text-primary);
+            background: transparent;
+        }
+
+        /* --- 4. NAVIGATION --- */
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -81,380 +90,177 @@
             z-index: 1000;
             background: rgba(250, 250, 250, 0.7);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            transition: var(--transition-smooth);
         }
 
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-dot {
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-        }
-
-        .nav-items a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-            position: relative;
-        }
-
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+        .nav-items a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         .nav-items a:hover { color: var(--text-primary); }
 
         /* --- 5. HERO SECTION --- */
-        .hero {
-            padding-top: 180px;
-            padding-bottom: 100px;
-            text-align: center;
-        }
+        .hero { padding-top: 180px; padding-bottom: 100px; text-align: center; }
+        .hero h1 { font-size: 4.5rem; line-height: 1.1; font-weight: 800; letter-spacing: -2px; margin-bottom: 1.5rem; animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+        .hero p { font-size: 1.3rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; animation: fadeUp 0.8s ease-out 0.2s forwards; opacity: 0; }
+        .hero-visual { width: 100%; height: 500px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-float); animation: fadeUp 0.8s ease-out 0.4s forwards; opacity: 0; }
+        .hero-visual img { width: 100%; height: 100%; object-fit: cover; }
 
-        .hero h1 {
-            font-size: 4.5rem;
-            line-height: 1.1;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease-out forwards;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-            opacity: 0;
-            animation: fadeUp 0.8s ease-out 0.2s forwards;
-        }
-
-        .hero-visual {
-            width: 100%;
-            height: 500px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            position: relative;
-            box-shadow: var(--shadow-float);
-            opacity: 0;
-            animation: scaleReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
-        }
-
-        .hero-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 2s ease;
-        }
-
-        .hero-visual:hover img {
-            transform: scale(1.05);
-        }
-
-        /* --- 6. SCROLL ANIMATION UTILITIES --- */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .reveal-on-scroll.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- 7. ARTICLE GRID --- */
-        .grid-section { padding: 8rem 0; }
+        /* --- 6. GRID SYSTEM --- */
+        .grid-section { padding: 6rem 0; }
+        .section-header { margin-bottom: 3rem; }
+        .section-header h2 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 0.5rem;}
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
         
-        .section-header {
-            margin-bottom: 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .section-header h2 { font-size: 2.5rem; letter-spacing: -1px; }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .card {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            border: 1px solid var(--border);
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-float);
-            border-color: transparent;
-        }
-
-        .card-img-container {
-            height: 240px;
-            overflow: hidden;
-        }
-
-        .card-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
+        .card { background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: var(--transition-smooth); border: 1px solid var(--border); }
+        .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-float); border-color: transparent; }
+        .card-img-container { height: 240px; overflow: hidden; }
+        .card-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img-container img { transform: scale(1.1); }
-
         .card-body { padding: 2rem; }
+        .tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 1rem; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; }
+        .card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
 
-        .tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .read-indicator {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: var(--transition-smooth);
-        }
-
-        .card:hover .read-indicator {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* --- 8. INTERACTIVE CALCULATOR --- */
-        .calculator-wrapper {
-            background: var(--text-primary);
-            color: white;
+        /* --- 7. FLIGHT SIMULATOR (NEW) --- */
+        .sim-container {
+            background: #0f172a; /* Dark cockpit bg */
             border-radius: var(--radius-lg);
-            padding: 5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            position: relative;
             overflow: hidden;
-        }
-
-        /* Ambient glow effect background */
-        .calculator-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(0,0,0,0) 50%);
-            pointer-events: none;
-        }
-
-        .calc-input-area { position: relative; z-index: 2; }
-        
-        .calc-input-wrapper {
             position: relative;
-            margin-bottom: 2rem;
-        }
-
-        .calc-input-wrapper input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255,255,255,0.2);
-            font-size: 3rem;
+            box-shadow: var(--shadow-float);
             color: white;
-            padding: 1rem 0;
-            font-family: var(--font-sans);
-            outline: none;
-            transition: border-color 0.3s;
+            display: grid;
+            grid-template-columns: 1fr 250px; /* Viewport | HUD */
+            height: 500px;
         }
 
-        .calc-input-wrapper input:focus {
-            border-bottom-color: var(--accent);
-        }
-
-        .calc-input-wrapper label {
-            position: absolute;
-            top: 0; left: 0;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .calc-btn {
-            background: white;
-            color: black;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .calc-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-        }
-
-        .result-display {
-            text-align: right;
+        .sim-viewport {
             position: relative;
-            z-index: 2;
+            background: linear-gradient(to bottom, #3b82f6 50%, #64748b 50%); /* Simple sky/ground */
+            overflow: hidden;
+            transition: background-position 0.5s;
         }
 
-        .big-number {
-            font-size: 8rem;
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -4px;
-            font-feature-settings: "tnum";
-            font-variant-numeric: tabular-nums;
-            background: linear-gradient(to bottom right, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .runway {
+            position: absolute;
+            top: 50%; left: 0; width: 100%; height: 100%;
+            background: #334155;
+            transform-origin: top;
+            transform: perspective(500px) rotateX(60deg) scale(2);
+            z-index: 1;
         }
 
-        .result-label {
-            font-size: 1.5rem;
-            color: rgba(255,255,255,0.6);
+        .runway-stripes {
+            width: 10px; height: 100%; margin: 0 auto;
+            border-left: 4px dashed white;
         }
 
-        /* --- 9. MODAL (READ MODE) --- */
-        .modal-backdrop {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95);
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-            backdrop-filter: blur(5px);
+        /* The Plane Icon */
+        .sim-plane {
+            position: absolute;
+            bottom: 45%; left: 50px;
+            width: 60px; height: 30px;
+            z-index: 10;
+            transition: all 1s ease-in-out;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
         }
 
-        .modal-backdrop.active {
-            opacity: 1;
-            pointer-events: all;
+        .sim-plane svg { width: 100%; height: 100%; fill: white; }
+
+        /* Clouds for parallax */
+        .cloud {
+            position: absolute; top: 20%; left: 110%;
+            width: 60px; height: 20px; background: rgba(255,255,255,0.4);
+            border-radius: 20px;
+            transition: left 3s linear;
         }
 
-        .modal-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s;
-        }
-
-        .modal-backdrop.active .modal-content {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .close-modal {
-            position: fixed;
-            top: 2rem; right: 2rem;
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            cursor: pointer;
+        /* HUD Section (Right Side) */
+        .sim-hud {
+            background: #1e293b;
+            padding: 2rem;
             display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 1px solid #334155;
+        }
+
+        .g-meter-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            transition: var(--transition-smooth);
-            z-index: 2001;
+            margin-bottom: 2rem;
         }
 
-        .close-modal:hover {
-            background: var(--text-primary);
-            color: white;
-            transform: rotate(90deg);
+        /* The vertical G Bar */
+        .g-bar-bg {
+            width: 12px; height: 200px;
+            background: #334155;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .article-hero-img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: var(--radius-lg);
-            margin-bottom: 3rem;
-            box-shadow: var(--shadow-float);
+        .g-bar-fill {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            height: 33%; /* Default 1G position approx */
+            background: linear-gradient(to top, var(--success), var(--accent), var(--danger));
+            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .article-text h1 {
+        .g-readout {
             font-size: 3rem;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            margin-top: 1rem;
         }
 
-        .article-text .meta {
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 2rem;
-            display: block;
+        .g-label { color: #94a3b8; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;}
+
+        .sim-controls { display: flex; gap: 1rem; flex-direction: column; }
+        .sim-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 0.8rem; border-radius: 8px;
+            cursor: pointer; font-weight: 600;
+            transition: 0.2s;
+        }
+        .sim-btn:hover { background: rgba(255,255,255,0.2); }
+        .sim-btn.active { background: var(--accent); border-color: var(--accent); }
+
+        .status-text {
+            position: absolute; top: 1rem; left: 1rem;
+            background: rgba(0,0,0,0.5); padding: 0.5rem 1rem;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+            color: white; z-index: 20;
         }
 
-        .article-text p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #374151;
-            margin-bottom: 2rem;
-        }
+        /* --- 8. CALCULATOR (Keep Minimalist) --- */
+        .calculator-section { background: #f4f4f5; border-radius: var(--radius-lg); padding: 4rem; text-align: center; margin-top: 4rem;}
+        .calc-wrapper { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;}
+        .calc-wrapper input { padding: 1rem; border: 1px solid var(--border); border-radius: 8px; width: 200px; }
+        
+        /* --- 9. MODAL --- */
+        .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
+        .modal-backdrop.active { opacity: 1; pointer-events: all; }
+        .modal-content { max-width: 800px; margin: 0 auto; padding: 6rem 2rem; opacity: 0; transform: translateY(50px); transition: transform 0.5s ease, opacity 0.5s; }
+        .modal-backdrop.active .modal-content { opacity: 1; transform: translateY(0); }
+        .close-modal { position: fixed; top: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: 0.3s; z-index: 2001; }
+        .close-modal:hover { background: black; color: white; }
+        .modal-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 2rem; box-shadow: var(--shadow-float); }
 
-        /* --- RESPONSIVE --- */
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
-            .calculator-wrapper { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
-            .big-number { font-size: 5rem; }
-            .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .nav-items { display: none; } /* Simplified for mobile */
+            .sim-container { grid-template-columns: 1fr; height: auto; }
+            .sim-viewport { height: 300px; }
+            .sim-hud { flex-direction: row; align-items: center; gap: 1rem; }
+            .g-meter-container { margin-bottom: 0; }
+            .g-bar-bg { height: 80px; width: 12px; }
+            .sim-controls { flex-direction: row; }
         }
     </style>
 </head>
@@ -462,14 +268,11 @@
 
     <nav>
         <div class="container nav-content">
-            <div class="logo">
-                <div class="logo-dot"></div>
-                WINGFLEX
-            </div>
+            <div class="logo"><div class="logo-dot"></div>WINGFLEX</div>
             <div class="nav-items">
                 <a href="#journal">Journal</a>
-                <a href="#simulation">Simulation</a>
-                <a href="#about">About</a>
+                <a href="#sim">Flight Sim</a>
+                <a href="#calc">Calculator</a>
             </div>
         </div>
     </nav>
@@ -477,213 +280,228 @@
     <header class="container hero">
         <h1>Bending the rules<br>of aerodynamics.</h1>
         <p>A deep dive into structural flexibility, load factors, and why modern planes are designed to act like giant springs.</p>
-        <button class="btn" onclick="document.getElementById('journal').scrollIntoView()">Start Exploring</button>
-        
-        <div style="height: 60px;"></div> <div class="hero-visual">
+        <button class="btn" onclick="document.getElementById('sim').scrollIntoView()">Try Simulation</button>
+        <div style="height: 60px;"></div>
+        <div class="hero-visual">
             <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Wing Flex">
         </div>
     </header>
 
     <section id="journal" class="container grid-section">
-        <div class="section-header reveal-on-scroll">
+        <div class="section-header">
             <h2>The Engineering Journal</h2>
             <p style="color: var(--text-secondary)">Curated insights into aviation physics.</p>
         </div>
-
         <div class="cards-grid">
-            <div class="card reveal-on-scroll" onclick="openModal(0)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="787 Wing">
-                </div>
+            <div class="card" onclick="openModal(0)">
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="787 Wing"></div>
                 <div class="card-body">
                     <span class="tag">Materials</span>
                     <h3>The Carbon Fiber Revolution</h3>
-                    <p>How composite materials allow the Boeing 787 to flex its wings by over 25 feet without snapping.</p>
-                    <div class="read-indicator">Read Article →</div>
+                    <p>How composite materials allow the Boeing 787 to flex its wings by over 25 feet.</p>
                 </div>
             </div>
-
-            <div class="card reveal-on-scroll" style="transition-delay: 100ms" onclick="openModal(1)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fighter Jet">
-                </div>
+            <div class="card" onclick="openModal(1)">
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fighter Jet"></div>
                 <div class="card-body">
                     <span class="tag">Physics</span>
                     <h3>Understanding Load Factor</h3>
-                    <p>Why a 60-degree turn makes your plane feel twice as heavy, and the math behind G-Force limits.</p>
-                    <div class="read-indicator">Read Article →</div>
+                    <p>Why a 60-degree turn makes your plane feel twice as heavy.</p>
                 </div>
             </div>
-
-            <div class="card reveal-on-scroll" style="transition-delay: 200ms" onclick="openModal(2)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Turbulence">
-                </div>
+            <div class="card" onclick="openModal(2)">
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Turbulence"></div>
                 <div class="card-body">
                     <span class="tag">Safety</span>
                     <h3>The "Ultimate Load" Test</h3>
-                    <p>Engineers purposely break wings in the hangar to prove they won't break in the sky.</p>
-                    <div class="read-indicator">Read Article →</div>
+                    <p>Engineers purposely break wings in the hangar to prove safety limits.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="simulation" class="container grid-section">
-        <div class="calculator-wrapper reveal-on-scroll">
-            <div class="calc-input-area">
-                <h2 style="margin-bottom: 2rem;">Turn Physics Simulation</h2>
-                <div class="calc-input-wrapper">
-                    <label>Bank Angle (Degrees)</label>
-                    <input type="number" id="bankInput" placeholder="45" value="45">
+    <section id="sim" class="container grid-section">
+        <div class="section-header">
+            <h2>Flight Phase Simulator</h2>
+            <p style="color: var(--text-secondary)">Experience the G-Force spikes during Landing and Takeoff.</p>
+        </div>
+
+        <div class="sim-container">
+            <div class="sim-viewport">
+                <div id="simStatus" class="status-text">Ready for Takeoff</div>
+                <div id="cloud" class="cloud"></div>
+                
+                <div class="runway">
+                    <div class="runway-stripes"></div>
                 </div>
-                <p style="opacity: 0.7; margin-bottom: 2rem; font-size: 0.9rem;">
-                    Commercial jets typically limit turns to 30°. Fighter jets can sustain 9Gs. Enter an angle to simulate the load.
-                </p>
-                <button class="calc-btn" onclick="animateCalculation()">Calculate Load</button>
+
+                <div id="simPlane" class="sim-plane">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
+                    </svg>
+                </div>
             </div>
-            
-            <div class="result-display">
-                <div class="big-number" id="gDisplay">1.41</div>
-                <div class="result-label">G-Force Load</div>
+
+            <div class="sim-hud">
+                <div class="g-meter-container">
+                    <div class="g-bar-bg">
+                        <div id="gBar" class="g-bar-fill"></div>
+                    </div>
+                    <div id="gValue" class="g-readout">1.0G</div>
+                    <div class="g-label">Vertical Load</div>
+                </div>
+
+                <div class="sim-controls">
+                    <button class="sim-btn" onclick="startTakeoff()">🛫 Takeoff</button>
+                    <button class="sim-btn" onclick="startLanding()">🛬 Landing</button>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer style="text-align: center; padding: 4rem 0; color: var(--text-secondary); font-size: 0.9rem;">
-        <p>© 2024 Wingflex Education. Designed for modern aviators.</p>
+    <section id="calc" class="container calculator-section">
+        <h2>Bank Angle Calculator</h2>
+        <p>Calculate G-Force based on turn angle.</p>
+        <div class="calc-wrapper">
+            <input type="number" id="bankInput" placeholder="Angle (e.g., 45)" min="0" max="85">
+            <button class="btn" onclick="calcGs()">Calculate</button>
+        </div>
+        <div style="margin-top: 2rem;">
+            <span id="calcResult" style="font-size: 3rem; font-weight: 800;">0.00</span>
+            <span style="color: var(--text-secondary)"> Gs</span>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem 0; color: var(--text-secondary); border-top: 1px solid var(--border);">
+        <p>© 2024 Wingflex Education.</p>
     </footer>
 
     <div class="modal-backdrop" id="modalBackdrop">
         <button class="close-modal" onclick="closeModal()">×</button>
         <div class="modal-content">
-            <img id="mImage" class="article-hero-img" src="">
-            <div class="article-text">
-                <span id="mTag" class="meta">CATEGORY</span>
-                <h1 id="mTitle">Article Title</h1>
-                <div id="mBody">Content goes here...</div>
-            </div>
+            <img id="mImg" class="modal-img" src="">
+            <h2 id="mTitle" style="font-size: 2.5rem; margin-bottom: 1rem;"></h2>
+            <div id="mBody" style="line-height: 1.8; font-size: 1.1rem; color: #374151;"></div>
         </div>
     </div>
 
     <script>
-        // --- DATA CONTENT ---
+        // --- 1. FLIGHT SIMULATION LOGIC ---
+        const plane = document.getElementById('simPlane');
+        const gBar = document.getElementById('gBar');
+        const gValue = document.getElementById('gValue');
+        const statusText = document.getElementById('simStatus');
+        const cloud = document.getElementById('cloud');
+
+        function updateG(g, duration = 300) {
+            gValue.innerText = g.toFixed(1) + "G";
+            // Map 1G to 33% height, 2G to 80% height approx
+            const height = (g * 33); 
+            gBar.style.height = `${Math.min(height, 100)}%`;
+            
+            // Color logic
+            if(g > 1.6) gBar.style.background = "var(--danger)";
+            else if(g > 1.2) gBar.style.background = "orange";
+            else gBar.style.background = "linear-gradient(to top, var(--success), var(--accent))";
+        }
+
+        function startTakeoff() {
+            // Reset position
+            plane.style.transition = 'all 0.5s';
+            plane.style.bottom = '15%';
+            plane.style.left = '10%';
+            plane.style.transform = 'rotate(0deg)';
+            statusText.innerText = "Status: Taxiing...";
+            updateG(1.0);
+
+            setTimeout(() => {
+                // Acceleration
+                statusText.innerText = "Status: Accelerating (Thrust)";
+                plane.style.transition = 'left 2s ease-in';
+                plane.style.left = '40%';
+                updateG(1.2); // Longitudinal force simulated as total load
+
+                setTimeout(() => {
+                    // Rotation
+                    statusText.innerText = "Status: Rotation (Pull Up!)";
+                    plane.style.transition = 'all 1.5s ease-out';
+                    plane.style.transform = 'rotate(-20deg)';
+                    plane.style.bottom = '60%';
+                    plane.style.left = '70%';
+                    updateG(1.8); // G-Spike
+
+                    // Move cloud
+                    cloud.style.transition = 'left 1s linear';
+                    cloud.style.left = '-20%';
+
+                    setTimeout(() => {
+                        // Climb stabilized
+                        statusText.innerText = "Status: Climbing stabilized";
+                        updateG(1.0);
+                        cloud.style.left = '110%'; // reset cloud
+                    }, 1500);
+
+                }, 2000);
+            }, 1000);
+        }
+
+        function startLanding() {
+            // Initial Approach State
+            plane.style.transition = 'none';
+            plane.style.left = '10%';
+            plane.style.bottom = '80%';
+            plane.style.transform = 'rotate(5deg)'; // Nose slightly down or level
+            updateG(0.9); // Feeling slightly light descending
+            statusText.innerText = "Status: Approach";
+
+            setTimeout(() => {
+                // Descent
+                plane.style.transition = 'all 2s ease-in-out';
+                plane.style.left = '50%';
+                plane.style.bottom = '20%';
+                
+                setTimeout(() => {
+                    // Flare (The G-Spike)
+                    statusText.innerText = "Status: Flare (Pulling Back)";
+                    plane.style.transition = 'all 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
+                    plane.style.transform = 'rotate(-5deg)'; // Nose up
+                    plane.style.bottom = '15%'; // Hover just above ground
+                    updateG(1.4); // G-Force spikes as descent is arrested
+
+                    setTimeout(() => {
+                        // Touchdown
+                        statusText.innerText = "Status: Touchdown & Braking";
+                        plane.style.transform = 'rotate(0deg)';
+                        updateG(1.1); // Braking force
+                    }, 800);
+                }, 2000);
+            }, 500);
+        }
+
+        // --- 2. CALCULATOR LOGIC ---
+        function calcGs() {
+            const val = parseFloat(document.getElementById('bankInput').value);
+            if(!val || val > 89) return;
+            const res = 1 / Math.cos(val * Math.PI / 180);
+            document.getElementById('calcResult').innerText = res.toFixed(2);
+        }
+
+        // --- 3. MODAL LOGIC (Content for cards) ---
         const articles = [
-            {
-                title: "The Carbon Fiber Revolution",
-                tag: "AEROSPACE MATERIALS",
-                image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `
-                    <p>The "Wingflex" phenomenon has become a signature visual of modern aviation, most notably with the Boeing 787 Dreamliner and Airbus A350. Unlike older aluminum aircraft, which were relatively rigid, these new aircraft utilize Carbon-Fiber Reinforced Polymer (CFRP) for their primary wing structures.</p>
-                    <p><strong>Why Flexibility Matters?</strong><br>Imagine driving a car with no suspension over a pothole. It would be violent. Now imagine a car with soft springs. It glides. Wingflex acts as a massive aerodynamic shock absorber. When the plane hits a gust of wind, the wing bends, absorbing the energy rather than transferring it instantly to the fuselage. This results in a significantly smoother ride for passengers and less fatigue on the airframe.</p>
-                    <p>The tip of a 787 wing can flex upward by approximately 10 to 12 feet during normal flight operations, and much further during testing.</p>`
-            },
-            {
-                title: "Understanding Load Factor",
-                tag: "NEWTONIAN PHYSICS",
-                image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `
-                    <p>When pilots talk about "pulling Gs," they are referring to Load Factor. In straight and level flight, the wings support a load equal to the aircraft's weight (1G). However, turning requires a horizontal component of lift (centripetal force), which means the total lift generated must increase.</p>
-                    <p>The math is governed by the equation: <code>Load Factor = 1 / cos(Bank Angle)</code>.</p>
-                    <p>At a 60-degree bank, the cosine is 0.5. Therefore, the load factor is 1 / 0.5 = 2. The wings are now supporting twice the weight of the aircraft. For a 300-ton jet, the wings effectively "feel" 600 tons of weight. This is why structural integrity is so vital, and why pilots must manage their speed and angle carefully to avoid overstressing the airframe.</p>`
-            },
-            {
-                title: "The Ultimate Load Test",
-                tag: "STRUCTURAL SAFETY",
-                image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `
-                    <p>Before a new aircraft type is certified to carry passengers, one airframe is sacrificed in the name of science. This is the Static Strength Test. The aircraft is placed in a rig, and hydraulic jacks pull the wings upward, simulating forces far beyond what nature can produce.</p>
-                    <p><strong>Limit Load vs. Ultimate Load</strong><br>The "Limit Load" is the highest force expected in service (e.g., a massive storm). The "Ultimate Load" is 150% of that limit. The wing must hold the Ultimate Load for 3 seconds without failure.</p>
-                    <p>In the famous test of the Boeing 777, the wings were bent upward until the tips were higher than the fuselage roof. They finally snapped at 154% of the design limit, accompanied by a sound like a cannon shot. This proved the engineering models were incredibly accurate and the plane was safe.</p>`
-            }
+            { t: "Carbon Fiber Magic", b: "The 787 Dreamliner uses composite materials that allow the wing to flex significantly. This acts as a dampener for turbulence.", i: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" },
+            { t: "G-Force Physics", b: "In a 60 degree bank turn, the G-force is exactly 2.0. This means the wings support twice the aircraft weight.", i: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" },
+            { t: "Ultimate Load", b: "Wings are tested to 150% of the highest expected load. They usually bend over 20 feet before snapping!", i: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" }
         ];
-
-        // --- SCROLL ANIMATIONS ---
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-
-        // --- CALCULATOR ANIMATION ---
-        function animateCalculation() {
-            const input = document.getElementById('bankInput');
-            const display = document.getElementById('gDisplay');
-            let angle = parseFloat(input.value);
-
-            // Validation
-            if (isNaN(angle) || angle < 0 || angle >= 90) {
-                input.style.borderBottomColor = '#ef4444'; // Red error
-                setTimeout(() => input.style.borderBottomColor = 'rgba(255,255,255,0.2)', 1000);
-                return;
-            }
-
-            // Calculation
-            const rad = angle * (Math.PI / 180);
-            const target = 1 / Math.cos(rad);
-            
-            // Animation Loop
-            let current = 0;
-            const step = target / 30; // 30 frames approx
-            
-            function update() {
-                current += step;
-                if (current >= target) {
-                    display.textContent = target.toFixed(2);
-                } else {
-                    display.textContent = current.toFixed(2);
-                    requestAnimationFrame(update);
-                }
-            }
-            update();
+        
+        const modal = document.getElementById('modalBackdrop');
+        function openModal(i) {
+            document.getElementById('mTitle').innerText = articles[i].t;
+            document.getElementById('mBody').innerText = articles[i].b;
+            document.getElementById('mImg').src = articles[i].i;
+            modal.classList.add('active');
         }
-
-        // --- MODAL LOGIC ---
-        const backdrop = document.getElementById('modalBackdrop');
-        const mImage = document.getElementById('mImage');
-        const mTitle = document.getElementById('mTitle');
-        const mTag = document.getElementById('mTag');
-        const mBody = document.getElementById('mBody');
-
-        function openModal(index) {
-            const data = articles[index];
-            
-            // Populate Data
-            mImage.src = data.image;
-            mTitle.textContent = data.title;
-            mTag.textContent = data.tag;
-            mBody.innerHTML = data.content;
-
-            // Show Modal
-            backdrop.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Stop scrolling
-        }
-
-        function closeModal() {
-            backdrop.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Resume scrolling
-        }
-
-        // Close on Escape Key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        // Close on Backdrop Click
-        backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) closeModal();
-        });
-
+        function closeModal() { modal.classList.remove('active'); }
+        modal.onclick = (e) => { if(e.target === modal) closeModal(); }
     </script>
 </body>
 </html>
