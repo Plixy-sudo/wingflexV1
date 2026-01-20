@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wingflex | Aeroelasticity & F1 Physics</title>
+    <title>Wingflex | Aeroelasticity & Wind Tunnel</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
 
     <style>
@@ -33,126 +33,63 @@
             overflow-x: hidden;
         }
 
-        /* --- 2. ANIMATIONS --- */
+        /* --- 2. UI ANIMATIONS --- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scaleReveal {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-
         /* --- 3. UI COMPONENTS --- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 2rem;
-            background: var(--text-primary);
-            color: white;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: var(--transition-smooth);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 1rem 2rem; background: var(--text-primary); color: white;
+            border-radius: 50px; font-weight: 600; transition: var(--transition-smooth);
+            border: none; cursor: pointer; letter-spacing: 0.5px;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            background: black;
-        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); background: black; }
 
         /* --- 4. NAVIGATION --- */
         nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            padding: 1.25rem 0;
-            z-index: 1000;
-            background: rgba(250, 250, 250, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            position: fixed; top: 0; left: 0; right: 0; padding: 1.25rem 0; z-index: 1000;
+            background: rgba(250, 250, 250, 0.7); backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            transition: var(--transition-smooth);
         }
-
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
         .nav-items a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         .nav-items a:hover { color: var(--text-primary); }
 
-        /* --- 5. HERO SECTION --- */
+        /* --- 5. HERO & SECTIONS --- */
         .hero { padding-top: 180px; padding-bottom: 100px; text-align: center; }
         .hero h1 { font-size: 4.5rem; line-height: 1.1; font-weight: 800; letter-spacing: -2px; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease-out forwards; }
         .hero p { font-size: 1.3rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.6; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s forwards; }
-        .hero-visual { width: 100%; height: 500px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-float); opacity: 0; animation: scaleReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; }
+        .hero-visual { width: 100%; height: 500px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-float); opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
         .hero-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 2s ease; }
-        .hero-visual:hover img { transform: scale(1.05); }
-
-        /* --- 6. GRID LAYOUT --- */
+        
         .grid-section { padding: 8rem 0; }
         .section-header { margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end; }
         .section-header h2 { font-size: 2.5rem; letter-spacing: -1px; }
+
+        /* --- 6. CARDS --- */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
-        
-        .card { background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: var(--transition-smooth); border: 1px solid var(--border); position: relative; }
-        .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-float); border-color: transparent; }
+        .card { background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: var(--transition-smooth); border: 1px solid var(--border); }
+        .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-float); }
         .card-img-container { height: 240px; overflow: hidden; }
         .card-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img-container img { transform: scale(1.1); }
         .card-body { padding: 2rem; }
         .tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--accent); margin-bottom: 1rem; display: block; }
         .card h3 { font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; }
-        .card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-        .read-indicator { margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; opacity: 0; transform: translateX(-10px); transition: var(--transition-smooth); }
+        .read-indicator { margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateX(-10px); transition: var(--transition-smooth); }
         .card:hover .read-indicator { opacity: 1; transform: translateX(0); }
 
-        /* --- 7. CALCULATOR UI --- */
-        .calculator-wrapper {
-            background: var(--text-primary);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 4rem; /* Spacing between calc and sim */
-        }
-        .calculator-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(0,0,0,0) 50%); pointer-events: none; }
-        .calc-input-area { position: relative; z-index: 2; }
-        .calc-input-wrapper { position: relative; margin-bottom: 2rem; }
-        .calc-input-wrapper input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); font-size: 3rem; color: white; padding: 1rem 0; font-family: var(--font-sans); outline: none; transition: border-color 0.3s; }
-        .calc-input-wrapper input:focus { border-bottom-color: var(--accent); }
-        .calc-input-wrapper label { position: absolute; top: 0; left: 0; font-size: 0.9rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
-        .calc-btn { background: white; color: black; padding: 1rem 2.5rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); }
-        .calc-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
-        .result-display { text-align: right; position: relative; z-index: 2; }
-        .big-number { font-size: 8rem; font-weight: 800; line-height: 1; letter-spacing: -4px; font-variant-numeric: tabular-nums; background: linear-gradient(to bottom right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .result-label { font-size: 1.5rem; color: rgba(255,255,255,0.6); }
-
-        /* --- 8. SIMULATION CANVAS --- */
+        /* --- 7. WIND TUNNEL STYLES --- */
         .sim-container {
             position: relative;
-            background: #1f2937;
+            background: #111827; /* Dark tunnel */
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-float);
@@ -161,71 +98,57 @@
 
         canvas { display: block; width: 100%; height: 100%; }
 
-        .sim-ui { position: absolute; top: 20px; left: 20px; pointer-events: none; z-index: 10; }
+        .sim-controls {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 0.5rem; color: white; width: 40%; }
+        .control-group label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
         
-        .g-meter {
-            width: 120px; height: 120px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.2);
-            position: relative;
-            margin-bottom: 1rem;
-        }
-        .g-meter::after { content: '1G'; position: absolute; top: 5px; left: 50%; transform: translateX(-50%); font-size: 10px; color: rgba(255,255,255,0.5); }
-        .g-dot {
-            width: 12px; height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px var(--accent);
-            transition: top 0.1s, left 0.1s;
+        input[type=range] {
+            width: 100%; cursor: pointer; accent-color: var(--accent);
         }
 
-        .sim-stats { color: white; font-family: monospace; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        .telemetry-group { display: flex; gap: 3rem; text-align: right; }
+        .stat-box h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+        .stat-box .value { font-size: 1.5rem; font-weight: 700; color: white; font-variant-numeric: tabular-nums; }
 
-        .crash-overlay {
-            position: absolute; inset: 0;
-            background: rgba(239, 68, 68, 0.4);
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
-            opacity: 0; pointer-events: none; transition: opacity 0.2s;
-            backdrop-filter: blur(4px); z-index: 20;
+        /* --- 8. CALCULATOR --- */
+        .calculator-wrapper {
+            background: var(--text-primary); color: white; border-radius: var(--radius-lg);
+            padding: 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+            margin-bottom: 4rem; position: relative; overflow: hidden;
         }
-        .crash-overlay.active { opacity: 1; pointer-events: all; animation: pulse-red 2s infinite; }
-        .crash-msg { font-size: 3rem; font-weight: 900; color: white; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 1rem; }
-        
-        .sim-instructions {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            color: rgba(255,255,255,0.6); font-size: 0.9rem;
-            background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 50px; pointer-events: none;
-        }
+        .calculator-wrapper input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); font-size: 3rem; color: white; padding: 1rem 0; outline: none; }
+        .big-number { font-size: 6rem; font-weight: 800; line-height: 1; background: linear-gradient(to bottom right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- 9. MODAL & SCROLL --- */
-        .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
-
+        /* --- 9. MODAL --- */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95); z-index: 2000;
-            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-            backdrop-filter: blur(5px); overflow-y: auto; -webkit-overflow-scrolling: touch;
+            background: rgba(255,255,255,0.95); z-index: 2000; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease; backdrop-filter: blur(5px); overflow-y: auto;
         }
         .modal-backdrop.active { opacity: 1; pointer-events: all; }
-        .modal-content { max-width: 800px; margin: 4rem auto 8rem auto; padding: 0 2rem; opacity: 0; transform: translateY(50px); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s; }
+        .modal-content { max-width: 800px; margin: 4rem auto 8rem auto; padding: 0 2rem; opacity: 0; transform: translateY(50px); transition: 0.5s; }
         .modal-backdrop.active .modal-content { opacity: 1; transform: translateY(0); }
-        .close-modal { position: fixed; top: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: var(--transition-smooth); z-index: 2001; box-shadow: var(--shadow-float); }
-        .close-modal:hover { background: var(--text-primary); color: white; transform: rotate(90deg); }
+        .close-modal { position: fixed; top: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer; font-size: 1.5rem; z-index: 2001; }
         
-        .article-hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; box-shadow: var(--shadow-float); }
-        .article-text h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; letter-spacing: -1px; }
-        .article-text .meta { color: var(--accent); font-weight: 600; margin-bottom: 2rem; display: block; }
+        .article-hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; }
+        .article-text h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
         .article-text p { font-size: 1.2rem; line-height: 1.8; color: #374151; margin-bottom: 2rem; }
+
+        .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
+        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
             .calculator-wrapper { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
-            .big-number { font-size: 5rem; }
-            .nav-items { display: none; }
-            .g-meter { width: 80px; height: 80px; }
+            .sim-controls { flex-direction: column; gap: 1.5rem; }
+            .control-group, .telemetry-group { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -236,7 +159,7 @@
             <div class="logo"><div class="logo-dot"></div>WINGFLEX</div>
             <div class="nav-items">
                 <a href="#journal">Journal</a>
-                <a href="#lab">Physics Lab</a>
+                <a href="#lab">Wind Tunnel</a>
                 <a href="#about">About</a>
             </div>
         </div>
@@ -290,48 +213,44 @@
 
     <section id="lab" class="container grid-section">
         <div class="section-header reveal-on-scroll">
-            <h2>Aerodynamic Load Lab</h2>
-            <p style="color: var(--text-secondary)">Interactive tools to calculate and visualize force.</p>
+            <h2>Aerodynamic Lab</h2>
+            <p style="color: var(--text-secondary)">Simulation tools for fluid dynamics.</p>
         </div>
 
         <div class="calculator-wrapper reveal-on-scroll">
             <div class="calc-input-area">
-                <h3 style="margin-bottom: 2rem; font-size: 1.5rem;">Load Factor Calculator</h3>
-                <div class="calc-input-wrapper">
-                    <label>Bank Angle (Degrees)</label>
+                <h3 style="margin-bottom: 2rem; font-size: 1.5rem;">Bank Angle Calculator</h3>
+                <div style="margin-bottom: 2rem; position: relative;">
+                    <label style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">Angle (Degrees)</label>
                     <input type="number" id="bankInput" placeholder="45" value="45">
                 </div>
-                <p style="opacity: 0.7; margin-bottom: 2rem; font-size: 0.9rem;">
-                    Commercial jets limit turns to 30° (1.15G). Enter an angle to simulate the load increase.
-                </p>
-                <button class="calc-btn" onclick="animateCalculation()">Calculate</button>
+                <button class="btn" style="background: white; color: black;" onclick="animateCalculation()">Calculate G-Load</button>
             </div>
-            <div class="result-display">
+            <div class="result-display" style="text-align: right;">
                 <div class="big-number" id="calcDisplay">1.41</div>
-                <div class="result-label">G-Force Load</div>
+                <div style="font-size: 1.5rem; opacity: 0.7;">G-Force Load</div>
             </div>
         </div>
 
         <div class="sim-container reveal-on-scroll">
-            <canvas id="simCanvas"></canvas>
+            <canvas id="tunnelCanvas"></canvas>
             
-            <div class="sim-ui">
-                <div class="g-meter">
-                    <div class="g-dot" id="gDot"></div>
+            <div class="sim-controls">
+                <div class="control-group">
+                    <label>Wind Velocity (Mach)</label>
+                    <input type="range" id="windSpeed" min="0" max="100" value="50">
                 </div>
-                <div class="sim-stats">
-                    <div id="statG">0.00 G</div>
-                    <div id="statSpeed">0 km/h</div>
+                
+                <div class="telemetry-group">
+                    <div class="stat-box">
+                        <h4>Downforce</h4>
+                        <div class="value" id="valDownforce">1240 kg</div>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Drag</h4>
+                        <div class="value" id="valDrag">320 kg</div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="crash-overlay" id="crashOverlay">
-                <div class="crash-msg">OFF TRACK</div>
-                <button class="btn" onclick="resetSim()" style="background: white; color: red;">Reset Car</button>
-            </div>
-
-            <div class="sim-instructions">
-                Use <strong>Arrow Keys</strong> to stay on the track
             </div>
         </div>
     </section>
@@ -345,16 +264,15 @@
         <div class="modal-content">
             <img id="mImage" class="article-hero-img" src="">
             <div class="article-text">
-                <span id="mTag" class="meta">CATEGORY</span>
+                <span id="mTag" class="tag">CATEGORY</span>
                 <h1 id="mTitle">Article Title</h1>
                 <div id="mBody">Content goes here...</div>
-                <p>Modern wings are so strong that the testing rig often breaks before the wing does. The flexibility you see in flight is well within the elastic limit of the materials.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. GENERAL & SCROLL ---
+        // --- 1. GENERAL SCROLL OBSERVER ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -370,17 +288,11 @@
             const input = document.getElementById('bankInput');
             const display = document.getElementById('calcDisplay');
             let angle = parseFloat(input.value);
-            
-            if (isNaN(angle) || angle < 0 || angle >= 90) {
-                input.style.borderBottomColor = '#ef4444';
-                setTimeout(() => input.style.borderBottomColor = 'rgba(255,255,255,0.2)', 1000);
-                return;
-            }
+            if (isNaN(angle) || angle < 0 || angle >= 90) return;
 
             const target = 1 / Math.cos(angle * (Math.PI / 180));
             let current = 0;
             const step = target / 30;
-            
             function update() {
                 current += step;
                 if (current >= target) display.textContent = target.toFixed(2);
@@ -389,204 +301,180 @@
             update();
         }
 
-        // --- 3. MODAL LOGIC ---
-        const articles = [
-            {
-                title: "The Carbon Fiber Revolution",
-                tag: "AEROSPACE MATERIALS",
-                image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `<p>Wingflex acts as a massive aerodynamic shock absorber. When the plane hits a gust of wind, the wing bends, absorbing the energy rather than transferring it instantly to the fuselage.</p>`
-            },
-            {
-                title: "Understanding Load Factor",
-                tag: "NEWTONIAN PHYSICS",
-                image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `<p>The math is governed by the equation: <code>Load Factor = 1 / cos(Bank Angle)</code>. At 60-degrees bank, the wings support twice the weight of the aircraft.</p>`
-            },
-            {
-                title: "The Ultimate Load Test",
-                tag: "STRUCTURAL SAFETY",
-                image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                content: `<p>The "Ultimate Load" is 150% of the design limit. In the Boeing 777 test, the wings snapped at 154%, proving the engineering models were incredibly accurate.</p>`
+        // --- 3. WIND TUNNEL SIMULATOR ---
+        const canvas = document.getElementById('tunnelCanvas');
+        const ctx = canvas.getContext('2d');
+        const speedSlider = document.getElementById('windSpeed');
+        const dispDownforce = document.getElementById('valDownforce');
+        const dispDrag = document.getElementById('valDrag');
+
+        let particles = [];
+        let cw, ch;
+        let windSpeed = 0.5; // Base internal speed
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            cw = canvas.width;
+            ch = canvas.height;
+            initParticles();
+        }
+        window.addEventListener('resize', resizeCanvas);
+        
+        class Particle {
+            constructor() {
+                this.reset();
+                this.x = Math.random() * cw; // Randomize start x initially
             }
+
+            reset() {
+                this.x = -10;
+                this.y = 50 + Math.random() * (ch - 100);
+                this.vx = (windSpeed * 10) + Math.random();
+                this.history = [];
+            }
+
+            update() {
+                this.x += this.vx;
+                
+                // Store trail
+                this.history.push({x: this.x, y: this.y});
+                if(this.history.length > 20) this.history.shift();
+
+                // Simple Aero Interaction Logic (Fake CFD)
+                const carCenter = cw / 2;
+                const carY = ch / 2 + 50;
+                
+                // 1. Nose deflection
+                if(this.x > carCenter - 150 && this.x < carCenter - 100) {
+                    if(this.y > carY - 20) this.y -= 2 * windSpeed;
+                }
+
+                // 2. Cockpit/Engine Cover Curve
+                if(this.x > carCenter - 100 && this.x < carCenter + 50) {
+                    if(this.y > carY - 60) this.y -= 1 * windSpeed; // Push air over cockpit
+                }
+
+                // 3. Rear Wing (Downforce Generator) - Shoot air UP
+                if(this.x > carCenter + 120 && this.x < carCenter + 160) {
+                     if(this.y > carY - 100 && this.y < carY) {
+                         this.y -= 3 * windSpeed; // Upwash creates downforce
+                     }
+                }
+
+                // 4. Turbulence (Drag) behind car
+                if(this.x > carCenter + 180) {
+                    // Random jitter based on speed
+                    this.y += (Math.random() - 0.5) * (windSpeed * 5);
+                }
+
+                if(this.x > cw) this.reset();
+            }
+
+            draw() {
+                ctx.beginPath();
+                // Color based on speed (Blue = slow, Cyan = fast)
+                ctx.strokeStyle = `rgba(100, 200, 255, ${Math.max(0.1, windSpeed)})`;
+                ctx.lineWidth = 2;
+                if(this.history.length > 1) {
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for(let p of this.history) ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for(let i=0; i<150; i++) particles.push(new Particle());
+        }
+
+        function drawCar() {
+            const cx = cw / 2;
+            const cy = ch / 2 + 50;
+
+            ctx.fillStyle = '#374151'; // Dark Grey Silhouette
+            ctx.beginPath();
+            
+            // F1 Shape Approximation
+            ctx.moveTo(cx - 160, cy); // Front Wing Low
+            ctx.lineTo(cx - 100, cy - 20); // Nose Cone
+            ctx.lineTo(cx - 40, cy - 30); // Cockpit start
+            ctx.lineTo(cx, cy - 50); // Halo/Helmet
+            ctx.lineTo(cx + 80, cy - 40); // Engine Cover slope
+            ctx.lineTo(cx + 140, cy - 60); // Rear Wing Support
+            ctx.lineTo(cx + 140, cy - 80); // Rear Wing Top
+            ctx.lineTo(cx + 160, cy - 80); 
+            ctx.lineTo(cx + 160, cy); // Rear End
+            ctx.lineTo(cx - 160, cy); // Bottom Flat Floor
+            
+            ctx.fill();
+
+            // Wheels (Simple circles)
+            ctx.fillStyle = '#111';
+            ctx.beginPath(); ctx.arc(cx - 120, cy, 25, 0, Math.PI*2); ctx.fill(); // Front
+            ctx.beginPath(); ctx.arc(cx + 120, cy, 25, 0, Math.PI*2); ctx.fill(); // Rear
+        }
+
+        function updateTelemetry() {
+            // Fake physics math
+            // F = v^2 * constant
+            const v = parseInt(speedSlider.value);
+            windSpeed = 0.2 + (v / 100); // Scale 0.2 to 1.2
+            
+            // Update particles speed
+            particles.forEach(p => p.vx = (windSpeed * 10) + Math.random());
+
+            const df = Math.floor(v * v * 0.8);
+            const dr = Math.floor(v * v * 0.25);
+
+            dispDownforce.textContent = df + " kg";
+            dispDrag.textContent = dr + " kg";
+        }
+
+        speedSlider.addEventListener('input', updateTelemetry);
+
+        function loop() {
+            // Trail effect (semi-transparent clear)
+            ctx.fillStyle = 'rgba(17, 24, 39, 0.4)';
+            ctx.fillRect(0, 0, cw, ch);
+
+            drawCar();
+            particles.forEach(p => { p.update(); p.draw(); });
+
+            requestAnimationFrame(loop);
+        }
+
+        // Init
+        resizeCanvas();
+        updateTelemetry();
+        loop();
+
+        // --- 4. MODAL LOGIC ---
+        const articles = [
+            { title: "The Carbon Fiber Revolution", content: "<p>The Wingflex phenomenon...</p>", image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&w=1200&q=80" },
+            { title: "Understanding Load Factor", content: "<p>When pilots talk about pulling Gs...</p>", image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&w=1200&q=80" },
+            { title: "The Ultimate Load Test", content: "<p>Wings are tested to destruction...</p>", image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&w=1200&q=80" }
         ];
+        
         const backdrop = document.getElementById('modalBackdrop');
         const mImage = document.getElementById('mImage');
         const mTitle = document.getElementById('mTitle');
-        const mTag = document.getElementById('mTag');
         const mBody = document.getElementById('mBody');
 
         function openModal(index) {
-            const data = articles[index];
-            mImage.src = data.image; mTitle.textContent = data.title; mTag.textContent = data.tag; mBody.innerHTML = data.content;
-            backdrop.classList.add('active'); document.body.style.overflow = 'hidden';
+            mImage.src = articles[index].image;
+            mTitle.innerText = articles[index].title;
+            mBody.innerHTML = articles[index].content;
+            backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        function closeModal() { backdrop.classList.remove('active'); document.body.style.overflow = 'auto'; }
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
-
-        // --- 4. F1 SIMULATOR ---
-        const canvas = document.getElementById('simCanvas');
-        const ctx = canvas.getContext('2d');
-        const gDot = document.getElementById('gDot');
-        const statG = document.getElementById('statG');
-        const statSpeed = document.getElementById('statSpeed');
-        const crashOverlay = document.getElementById('crashOverlay');
-
-        let cw, ch;
-        function resizeCanvas() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width; canvas.height = rect.height;
-            cw = canvas.width; ch = canvas.height;
-            if(!crashed) resetSim();
+        function closeModal() {
+            backdrop.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
-        let crashed = false;
-
-        const car = {
-            x: 100, y: 100, width: 30, height: 16,
-            angle: 0, speed: 0, maxSpeed: 10,
-            acceleration: 0.2, friction: 0.96, turnSpeed: 0.07
-        };
-
-        window.addEventListener('keydown', (e) => { if(keys.hasOwnProperty(e.key)) { keys[e.key] = true; e.preventDefault(); } });
-        window.addEventListener('keyup', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = false; });
-
-        function resetSim() {
-            // Position car on the straight part of the track
-            car.x = cw / 2;
-            car.y = ch - 80;
-            car.speed = 0;
-            car.angle = Math.PI; // Face left
-            crashed = false;
-            crashOverlay.classList.remove('active');
-        }
-        setTimeout(resetSim, 100);
-
-        function updatePhysics() {
-            if (crashed) return;
-
-            // Drive
-            if (keys.ArrowUp) car.speed += car.acceleration;
-            if (keys.ArrowDown) car.speed -= car.acceleration;
-            car.speed *= car.friction;
-
-            // Turn
-            if (Math.abs(car.speed) > 0.1) {
-                const direction = car.speed > 0 ? 1 : -1;
-                if (keys.ArrowLeft) car.angle -= car.turnSpeed * direction;
-                if (keys.ArrowRight) car.angle += car.turnSpeed * direction;
-            }
-
-            // Move
-            car.x += Math.cos(car.angle) * car.speed;
-            car.y += Math.sin(car.angle) * car.speed;
-
-            // Track Boundaries Logic (Rounded Rect)
-            const trackPadding = 50; 
-            const trackWidth = 140; 
-            
-            // Outer Boundary
-            const outerCheck = isPointInRoundedRect(car.x, car.y, trackPadding, trackPadding, cw - trackPadding*2, ch - trackPadding*2, 60);
-            
-            // Inner Island (The "Hole")
-            const innerPadding = trackPadding + trackWidth;
-            const innerCheck = isPointInRoundedRect(car.x, car.y, innerPadding, innerPadding, cw - innerPadding*2, ch - innerPadding*2, 60);
-
-            // Crash if OUTSIDE outer boundary OR INSIDE inner boundary
-            if (!outerCheck || innerCheck) {
-                if(Math.abs(car.speed) > 2) {
-                    crashed = true;
-                    crashOverlay.classList.add('active');
-                } else {
-                    // Bounce
-                    car.speed *= -0.5;
-                    car.x = Math.max(trackPadding, Math.min(cw-trackPadding, car.x));
-                    car.y = Math.max(trackPadding, Math.min(ch-trackPadding, car.y));
-                }
-            }
-
-            // G-Meter
-            let latG = (keys.ArrowLeft ? -1 : keys.ArrowRight ? 1 : 0) * (car.speed * 0.15);
-            let longG = (keys.ArrowUp ? 1 : keys.ArrowDown ? -1 : 0) * 0.5;
-            
-            const totalG = Math.sqrt(latG*latG + longG*longG).toFixed(2);
-            statG.innerText = totalG + ' G';
-            statSpeed.innerText = Math.abs(Math.round(car.speed * 20)) + ' km/h';
-
-            const dotX = 50 + (latG * 10);
-            const dotY = 50 - (longG * 10);
-            gDot.style.left = `${Math.max(10, Math.min(90, dotX))}%`;
-            gDot.style.top = `${Math.max(10, Math.min(90, dotY))}%`;
-        }
-
-        // Helper to check boundaries
-        function isPointInRoundedRect(x, y, rx, ry, rw, rh, radius) {
-            // This is a simplified boundary check (box check) for simplicity in this demo
-            // A perfect mathematical check for rounded corners is complex, 
-            // but this visual matches reasonably well for a game.
-            if (x < rx || x > rx + rw || y < ry || y > ry + rh) return false;
-            return true;
-        }
-
-        function draw() {
-            // Grass
-            ctx.fillStyle = '#064e3b'; // Dark green
-            ctx.fillRect(0, 0, cw, ch);
-
-            // Track Constants
-            const trackPadding = 50; 
-            const trackWidth = 140; 
-            const radius = 60;
-
-            // Draw Track (Asphalt)
-            ctx.beginPath();
-            ctx.roundRect(trackPadding, trackPadding, cw - trackPadding*2, ch - trackPadding*2, radius);
-            ctx.fillStyle = '#333';
-            ctx.fill();
-            ctx.strokeStyle = '#e5e7eb'; // White edge
-            ctx.lineWidth = 4;
-            ctx.stroke();
-
-            // Draw Inner Island (Grass)
-            ctx.beginPath();
-            const innerPadding = trackPadding + trackWidth;
-            ctx.roundRect(innerPadding, innerPadding, cw - innerPadding*2, ch - innerPadding*2, radius/2);
-            ctx.fillStyle = '#064e3b';
-            ctx.fill();
-            ctx.stroke();
-
-            // Start Line
-            ctx.save();
-            ctx.fillStyle = 'white';
-            ctx.translate(cw/2, ch - trackPadding - (trackWidth/2));
-            for(let i=0; i<4; i++) {
-                ctx.fillRect(-20 + (i*10), -30, 5, 60); // Chequered pattern simplified
-            }
-            ctx.restore();
-
-            // Car
-            ctx.save();
-            ctx.translate(car.x, car.y);
-            ctx.rotate(car.angle);
-            ctx.fillStyle = crashed ? '#ef4444' : '#2563eb';
-            ctx.fillRect(-15, -8, 30, 16);
-            // Wing
-            ctx.fillStyle = '#ccc';
-            ctx.fillRect(-18, -8, 4, 16);
-            ctx.fillStyle = '#fbbf24';
-            ctx.beginPath(); ctx.arc(-2, 0, 4, 0, Math.PI*2); ctx.fill();
-            ctx.restore();
-
-            requestAnimationFrame(draw);
-        }
-
-        function loop() { updatePhysics(); draw(); requestAnimationFrame(loop); }
-        loop();
-
+        backdrop.addEventListener('click', (e) => { if(e.target===backdrop) closeModal(); });
     </script>
 </body>
 </html>
