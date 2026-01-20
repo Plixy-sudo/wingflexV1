@@ -548,25 +548,43 @@
         }
     });
 </script>
-// Define the target sequence
-const secretCode = 'qwerty';
-let keyHistory = [];
+ <script>
+        // --- THE LOGIC ---
+        
+        const secretCode = 'qwerty';
+        let keyHistory = [];
 
-document.addEventListener('keydown', (e) => {
-    // 1. Safety check: Don't trigger if the user is typing in a text box
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const displayEl = document.getElementById('display');
+        const statusEl = document.getElementById('status');
 
-    // 2. Add the current key to our history (converted to lowercase)
-    keyHistory.push(e.key.toLowerCase());
+        document.addEventListener('keydown', (e) => {
+            // 1. Safety check: Don't trigger if typing in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    // 3. Keep the history array the same length as the secret code
-    if (keyHistory.length > secretCode.length) {
-        keyHistory.shift();
-    }
+            // 2. Add current key to history
+            const key = e.key.toLowerCase();
+            keyHistory.push(key);
 
-    // 4. Check if the sequence matches
-    if (keyHistory.join('') === secretCode) {
-        // Navigate to the specific file path
-        window.location.href = 'Education/Loader.html';
-    }
-});
+            // 3. Keep history length same as secret code (Sliding Window)
+            if (keyHistory.length > secretCode.length) {
+                keyHistory.shift();
+            }
+
+            // Update the visual display (for testing purposes)
+            displayEl.textContent = keyHistory.join('');
+
+            // 4. Check for match
+            if (keyHistory.join('') === secretCode) {
+                statusEl.textContent = "✅ Sequence Matched! Redirecting...";
+                statusEl.style.color = "green";
+                statusEl.style.fontWeight = "bold";
+                
+                // The Action
+                setTimeout(() => {
+                    window.location.href = 'Education/Loader.html';
+                }, 500); // Slight delay so you can see the success message
+            }
+        });
+    </script>
+</body>
+</html>
