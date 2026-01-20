@@ -548,3 +548,26 @@
         }
     });
 </script>
+<script>
+    // --- SECRET KEY SEQUENCE: QWERTY ---
+    const secretSequence = ['q', 'w', 'e', 'r', 't', 'y'];
+    let sequenceIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        // Ignore typing in inputs/textareas
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        const key = e.key.toLowerCase();
+
+        if (key === secretSequence[sequenceIndex]) {
+            sequenceIndex++;
+
+            if (sequenceIndex === secretSequence.length) {
+                window.location.href = 'education/Loader.html';
+                sequenceIndex = 0;
+            }
+        } else {
+            sequenceIndex = 0;
+        }
+    });
+</script>
