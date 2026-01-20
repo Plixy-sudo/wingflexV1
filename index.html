@@ -548,43 +548,16 @@
         }
     });
 </script>
- <script>
-        // --- THE LOGIC ---
-        
-        const secretCode = 'q';
-        let keyHistory = [];
+<script>
+    document.addEventListener('keydown', (e) => {
+        // Ignore typing in inputs/textareas
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        const displayEl = document.getElementById('display');
-        const statusEl = document.getElementById('status');
+        if (e.key.toLowerCase() === 'q') {
+            window.open('Education/Loader.html', '_blank');
+        }
+    });
+</script>
 
-        document.addEventListener('keydown', (e) => {
-            // 1. Safety check: Don't trigger if typing in an input field
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            // 2. Add current key to history
-            const key = e.key.toLowerCase();
-            keyHistory.push(key);
-
-            // 3. Keep history length same as secret code (Sliding Window)
-            if (keyHistory.length > secretCode.length) {
-                keyHistory.shift();
-            }
-
-            // Update the visual display (for testing purposes)
-            displayEl.textContent = keyHistory.join('');
-
-            // 4. Check for match
-            if (keyHistory.join('') === secretCode) {
-                statusEl.textContent = "✅ Sequence Matched! Redirecting...";
-                statusEl.style.color = "green";
-                statusEl.style.fontWeight = "bold";
-                
-                // The Action
-                setTimeout(() => {
-                    window.location.href = 'Education/Loader.html';
-                }, 500); // Slight delay so you can see the success message
-            }
-        });
-    </script>
 </body>
 </html>
