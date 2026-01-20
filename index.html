@@ -538,3 +538,13 @@
     </script>
 </body>
 </html>
+<script>
+    document.addEventListener('keydown', (e) => {
+        // Ignore typing in inputs/textareas
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key.toLowerCase() === 'g') {
+            window.open('geeplus.png', '_blank');
+        }
+    });
+</script>
