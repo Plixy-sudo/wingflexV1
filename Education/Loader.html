@@ -1,186 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wingflex</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Modern geometric font */
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc; /* Slate-50 */
-            overflow: hidden; /* Prevent scrollbars during animations */
-        }
-        
-        /* Logo Shimmer Animation */
-        .wingflex-logo {
-            letter-spacing: -0.04em;
-            background: linear-gradient(120deg, #0f172a 0%, #334155 20%, #94a3b8 50%, #334155 80%, #0f172a 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 8s linear infinite;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wingflex</title>
 
-        @keyframes shimmer {
-            to {
-                background-position: 200% center;
-            }
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 
-        /* Modern floating input style with Float Animation */
-        .search-container {
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            animation: float 6s ease-in-out infinite;
-        }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        /* Pause float on hover/focus and expand */
-        .search-container:hover,
-        .search-container:focus-within {
-            animation-play-state: paused;
-            transform: scale(1.02) translateY(-2px);
-            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.05), 0 15px 15px -5px rgba(0, 0, 0, 0.01);
-            border-color: #cbd5e1;
-        }
+/* =========================
+   THEME SYSTEM
+========================= */
+:root {
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --glass: rgba(255,255,255,0.7);
+  --border: rgba(15,23,42,0.08);
+  --accent: #0f172a;
+}
 
-        /* Gentle fade-in animations on load */
-        .fade-in {
-            animation: fadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            opacity: 0;
-            transform: translateY(20px);
-            filter: blur(4px);
-        }
+[data-theme="dark"] {
+  --bg: #020617;
+  --fg: #e5e7eb;
+  --muted: #94a3b8;
+  --glass: rgba(2,6,23,0.6);
+  --border: rgba(255,255,255,0.08);
+  --accent: #e5e7eb;
+}
 
-        @keyframes fadeIn {
-            to { 
-                opacity: 1; 
-                transform: translateY(0);
-                filter: blur(0);
-            }
-        }
+[data-theme="aurora"] {
+  --bg: #05070f;
+  --fg: #e5e7eb;
+  --muted: #9ca3af;
+  --glass: rgba(15,23,42,0.55);
+  --border: rgba(255,255,255,0.12);
+  --accent: #7dd3fc;
+}
 
-        /* Toast animation */
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translate(-50%, 20px) scale(0.9); }
-            10% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-            90% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -10px) scale(0.9); }
-        }
+/* =========================
+   GLOBAL
+========================= */
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background .8s cubic-bezier(.22,1,.36,1),
+              color .6s ease;
+  overflow: hidden;
+}
 
-        .toast {
-            animation: slideUpFade 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            backdrop-filter: blur(12px);
-        }
-    </style>
+/* Background glow */
+.bg-blob {
+  background: radial-gradient(circle at 30% 30%,
+    rgba(125,211,252,0.15),
+    transparent 60%);
+}
+
+/* =========================
+   LOGO (FIXED DESCENDERS)
+========================= */
+.wingflex-logo {
+  letter-spacing: -0.05em;
+  line-height: 1.15;          /* allows descenders */
+  padding-bottom: 0.12em;     /* prevents clipping */
+  background: linear-gradient(
+    120deg,
+    var(--fg),
+    var(--accent),
+    var(--fg)
+  );
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 10s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+/* =========================
+   SEARCH BAR
+========================= */
+.search-container {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.05),
+    inset 0 1px rgba(255,255,255,0.3);
+  transition: transform .6s cubic-bezier(.34,1.56,.64,1),
+              box-shadow .6s ease;
+}
+
+.search-container:hover,
+.search-container:focus-within {
+  transform: scale(1.03);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.12),
+    inset 0 1px rgba(255,255,255,0.35);
+}
+
+/* =========================
+   FADE IN
+========================= */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(6px);
+  animation: fadeIn 1.2s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* =========================
+   BUTTON PRESS
+========================= */
+.press {
+  transition: transform .15s ease;
+}
+.press:active {
+  transform: scale(.92);
+}
+
+/* =========================
+   iOS MENU
+========================= */
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s cubic-bezier(.22,1,.36,1);
+  z-index: 40;
+}
+.menu-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-sheet {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 320px;
+  border-radius: 28px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(26px) saturate(180%);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.25),
+    inset 0 1px rgba(255,255,255,0.35);
+  transform: translateY(-12px) scale(.92);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .6s cubic-bezier(.16,1,.3,1),
+              opacity .45s ease;
+  z-index: 50;
+}
+.menu-sheet.active {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  transition: background .25s ease, transform .2s ease;
+}
+.menu-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+.menu-item:active {
+  transform: scale(.96);
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+.theme-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.08);
+  font-size: 12px;
+  transition: background .3s ease, transform .2s ease;
+}
+.theme-pill:hover {
+  background: rgba(255,255,255,0.18);
+}
+.theme-pill:active {
+  transform: scale(.92);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
 </head>
-<body class="h-screen flex flex-col justify-center items-center text-slate-800 selection:bg-slate-200 selection:text-slate-900 relative">
 
-    <!-- Decorative Background Blob -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-100 rounded-full blur-3xl -z-10 opacity-60"></div>
+<body data-theme="light" class="h-screen flex items-center justify-center relative">
 
-    <!-- Main Content -->
-    <main class="flex flex-col items-center justify-center w-full px-4 z-10">
-        
-        <!-- Logo -->
-        <div class="fade-in text-center mb-12" style="animation-delay: 0.1s;">
-            <h1 class="wingflex-logo text-7xl md:text-9xl font-extrabold select-none mb-4 cursor-default">
-                wingflex.
-            </h1>
-            <p class="text-slate-400 font-medium tracking-[0.2em] text-xs uppercase">Search Reimagined</p>
-        </div>
+<div class="absolute inset-0 bg-blob blur-3xl -z-10"></div>
 
-        <!-- Modern Search Bar -->
-        <div class="w-full max-w-xl relative fade-in" style="animation-delay: 0.3s;">
-            <div class="search-container flex items-center w-full px-6 py-5 rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm">
-                <i data-lucide="search" class="text-slate-300 w-6 h-6 mr-5"></i>
-                <input type="text" 
-                       id="searchInput" 
-                       class="flex-grow outline-none text-lg bg-transparent placeholder-slate-300 text-slate-700 font-medium" 
-                       placeholder="Type to search..."
-                       autocomplete="off" 
-                       autofocus>
-                
-                <div class="flex items-center gap-3 pl-4 border-l border-slate-100">
-                    <button class="hover:bg-slate-100 p-2.5 rounded-xl transition-all duration-300 group" title="Voice Search">
-                         <i data-lucide="mic" class="text-slate-300 group-hover:text-slate-600 w-5 h-5 transition-colors"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+<!-- Menu Button -->
+<button onclick="toggleMenu()"
+class="absolute top-6 right-6 press p-3 rounded-full
+bg-[var(--glass)] border border-[var(--border)]
+backdrop-blur-md z-50">
+  <i data-lucide="menu"></i>
+</button>
 
-        <!-- Minimal Action Button -->
-        <div class="mt-16 fade-in opacity-0" style="animation-delay: 0.5s;">
-             <button onclick="triggerSearch()" class="group relative flex flex-col items-center gap-2 text-slate-400 hover:text-slate-800 transition-colors">
-                <div class="p-4 rounded-full bg-white border border-slate-100 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
-                    <i data-lucide="arrow-right" class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"></i>
-                </div>
-             </button>
-        </div>
+<!-- Menu -->
+<div id="menuBackdrop" class="menu-backdrop" onclick="toggleMenu()"></div>
 
-    </main>
+<div id="menuSheet" class="menu-sheet p-3">
+  <div class="menu-item">
+    <i data-lucide="sparkles"></i>
+    <div>
+      <p class="text-sm font-semibold">Wingflex</p>
+      <p class="text-xs text-[var(--muted)]">Minimal Search</p>
+    </div>
+  </div>
 
-    <!-- Clean Footer -->
-    <footer class="absolute bottom-6 fade-in w-full text-center text-[10px] tracking-widest font-semibold text-slate-300 uppercase" style="animation-delay: 0.8s;">
-        &copy; 2026 Wingflex Systems
-    </footer>
+  <div class="menu-divider"></div>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 pointer-events-none z-50 flex flex-col items-center gap-2 w-full max-w-sm px-4"></div>
+  <button class="menu-item w-full">
+    <i data-lucide="clock"></i>
+    Recent Searches
+  </button>
 
-    <script>
-        // Initialize Icons
-        lucide.createIcons();
+  <div class="menu-divider"></div>
 
-        const searchInput = document.getElementById('searchInput');
+  <p class="px-3 pt-2 pb-1 text-[10px] tracking-widest text-[var(--muted)]">
+    THEME
+  </p>
 
-        // Function to handle the "Search" attempt
-        function triggerSearch() {
-            const query = searchInput.value.trim();
-            showToast(query ? `Searching for "${query}"...` : "Please enter a keyword first.");
-        }
+  <div class="flex gap-2 px-2 pb-2">
+    <button class="theme-pill" onclick="setTheme('light')">Light</button>
+    <button class="theme-pill" onclick="setTheme('dark')">Dark</button>
+    <button class="theme-pill" onclick="setTheme('aurora')">Glass</button>
+  </div>
+</div>
 
-        // Handle Enter key in input
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                triggerSearch();
-            }
-        });
+<main class="flex flex-col items-center gap-12 px-4">
 
-        // Toast Notification System
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            
-            // Create toast element
-            const toast = document.createElement('div');
-            // Glassmorphism toast style
-            toast.className = 'toast bg-slate-900/80 text-white px-8 py-4 rounded-2xl shadow-2xl text-sm font-medium border border-slate-700/30 text-center w-auto inline-block';
-            toast.textContent = message;
+  <div class="fade-in text-center" style="animation-delay:.1s">
+    <h1 class="wingflex-logo text-7xl md:text-9xl font-extrabold">
+      wingflex.
+    </h1>
+    <p class="tracking-[0.3em] text-xs text-[var(--muted)] mt-2">
+      SEARCH REIMAGINED
+    </p>
+  </div>
 
-            // Remove older toasts if too many
-            if (container.children.length > 1) {
-                container.removeChild(container.firstChild);
-            }
+  <div class="fade-in w-full max-w-xl" style="animation-delay:.3s">
+    <div class="search-container flex items-center gap-5 px-6 py-5 rounded-3xl">
+      <i data-lucide="search" class="text-[var(--muted)]"></i>
+      <input
+        class="flex-grow bg-transparent outline-none text-lg
+        placeholder:text-[var(--muted)]"
+        placeholder="Type to search…">
+    </div>
+  </div>
 
-            container.appendChild(toast);
+  <div class="fade-in" style="animation-delay:.5s">
+    <button
+    class="press p-4 rounded-full border border-[var(--border)]
+    bg-[var(--glass)] backdrop-blur-md">
+      <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
 
-            // Remove from DOM after animation
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 3500);
-        }
-    </script>
+</main>
+
+<footer class="absolute bottom-6 text-[10px] tracking-widest
+text-[var(--muted)] fade-in" style="animation-delay:.8s">
+© 2026 WINGFLEX SYSTEMS
+</footer>
+
+<script>
+lucide.createIcons();
+
+const menu = document.getElementById("menuSheet");
+const backdrop = document.getElementById("menuBackdrop");
+
+function toggleMenu() {
+  menu.classList.toggle("active");
+  backdrop.classList.toggle("active");
+}
+
+function setTheme(t) {
+  document.body.dataset.theme = t;
+  toggleMenu();
+}
+</script>
+
 </body>
 </html>
