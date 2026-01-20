@@ -1,1 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wingflex Education | The Physics of Flight</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --text-color: #334155;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #1d4ed8;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), 
+                        url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            opacity: 0.9;
+        }
+
+        /* --- MAIN CONTENT GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- ARTICLE CARDS --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tag {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: fit-content;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            margin-top: auto;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .read-more:after {
+            content: '→';
+            margin-left: 5px;
+            transition: margin-left 0.2s;
+        }
+
+        .card:hover .read-more:after {
+            margin-left: 10px;
+        }
+
+        /* --- FEATURED SECTION (SIDE-BY-SIDE) --- */
+        .featured {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin: 6rem 0;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .featured-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .featured-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 20px 20px 0px var(--accent-color);
+        }
+
+        /* --- INTERACTIVE CALCULATOR --- */
+        .calculator-section {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .calculator-section h2 {
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .calc-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        input {
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: none;
+            width: 250px;
+            font-size: 1rem;
+        }
+
+        button.calc-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.calc-btn:hover {
+            background-color: #2563eb;
+        }
+
+        #result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            min-height: 2rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--primary-color);
+            color: #94a3b8;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; }
+            .featured { grid-template-columns: 1fr; padding: 1.5rem; }
+            .featured-image img { box-shadow: 10px 10px 0px var(--accent-color); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Wingflex<span>.Edu</span></div>
+        <div class="nav-links">
+            <a href="#">Articles</a>
+            <a href="#">Physics</a>
+            <a href="#">Gallery</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>The Art of Engineering</h1>
+        <p>Exploring the critical relationship between Wingflex, G-Forces, and modern Aviation Safety.</p>
+    </header>
+
+    <main class="container">
+        
+        <div class="grid">
+            
+            <article class="card">
+                <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Airplane Wing" class="card-img">
+                <div class="card-content">
+                    <span class="tag">Aerodynamics</span>
+                    <h2>What is Wingflex?</h2>
+                    <p>Wing flexibility is not a flaw; it is a feature. Modern aircraft wings are designed to bend significantly during flight. This flexibility acts like a giant shock absorber, smoothing out turbulence and reducing structural fatigue on the fuselage.</p>
+                    <a href="#" class="read-more">Read Article</a>
+                </div>
+            </article>
+
+            <article class="card">
+                <img src="https://images.unsplash.com/photo-1559067515-bf7d7044b1ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fighter Jet" class="card-img">
+                <div class="card-content">
+                    <span class="tag">Physics</span>
+                    <h2>Understanding G-Forces</h2>
+                    <p>When an airplane turns or pulls up, the wings must support more than just the aircraft's weight. This multiplier is called the "Load Factor" or G-Force. A 60-degree bank angle results in 2Gs, meaning the wings are supporting twice the plane's weight.</p>
+                    <a href="#" class="read-more">Read Article</a>
+                </div>
+            </article>
+
+            <article class="card">
+                <img src="https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Boeing 787" class="card-img">
+                <div class="card-content">
+                    <span class="tag">Engineering</span>
+                    <h2>The Dreamliner Effect</h2>
+                    <p>The Boeing 787 Dreamliner is famous for its composite wings. Carbon fiber allows for a much higher aspect ratio and extreme flexibility. In static tests, the wing tips were bent 25 feet upward before failure, proving immense structural integrity.</p>
+                    <a href="#" class="read-more">Read Article</a>
+                </div>
+            </article>
+
+        </div>
+
+        <section class="featured">
+            <div class="featured-content">
+                <h2>Why Wings Don't Snap</h2>
+                <p>It is a common fear among nervous flyers: seeing the wing bounce in turbulence. However, aeronautical engineers design wings with a "Limit Load" and an "Ultimate Load".</p>
+                <br>
+                <p>Commercial aircraft are tested to withstand 150% of the highest load ever expected in service. The wing spars, ribs, and skin work together to distribute stress evenly, allowing the wing to bend rather than break.</p>
+            </div>
+            <div class="featured-image">
+                
+                <img src="https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wing Structure">
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <h2>G-Force Calculator</h2>
+            <p>Estimate the G-Force in a level turn based on bank angle.</p>
+            <br>
+            <div class="calc-inputs">
+                <input type="number" id="bankAngle" placeholder="Bank Angle (degrees)" max="89" min="0">
+                <button class="calc-btn" onclick="calculateGForce()">Calculate Gs</button>
+            </div>
+            <div id="result">Enter an angle (e.g., 30, 45, 60)</div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Wingflex Education. Images courtesy of Unsplash.</p>
+    </footer>
+
+    <script>
+        // Simple Interaction: Scroll Reveal Effect
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+
+        // G-Force Calculator Function
+        function calculateGForce() {
+            const angleInput = document.getElementById('bankAngle');
+            const resultDiv = document.getElementById('result');
+            let angle = parseFloat(angleInput.value);
+
+            if (isNaN(angle) || angle < 0 || angle >= 90) {
+                resultDiv.textContent = "Please enter a valid angle between 0 and 89.";
+                resultDiv.style.color = "#ffcccc";
+                return;
+            }
+
+            // Formula: Load Factor = 1 / cos(angle)
+            // Convert degrees to radians for JS Math functions
+            const radians = angle * (Math.PI / 180);
+            const gForce = 1 / Math.cos(radians);
+
+            resultDiv.style.color = "#fff";
+            
+            if(gForce > 9) {
+                resultDiv.innerHTML = `${gForce.toFixed(2)} Gs <br> <span style="font-size:0.8rem">(Human blackout limit!)</span>`;
+            } else if (gForce > 2.5) {
+                resultDiv.innerHTML = `${gForce.toFixed(2)} Gs <br> <span style="font-size:0.8rem">(Uncomfortable for passengers)</span>`;
+            } else {
+                resultDiv.innerHTML = `${gForce.toFixed(2)} Gs <br> <span style="font-size:0.8rem">(Standard maneuver)</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
