@@ -1,1 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERO // PROTOCOL</title>
+    <style>
+        /* MINIMALIST DESIGN SYSTEM */
+        :root {
+            --bg: #0a0a0a;
+            --ui-bg: rgba(20, 20, 20, 0.6);
+            --accent: #00ffcc; /* Cyan */
+            --danger: #ff3333; /* Red */
+            --text: #e0e0e0;
+            --font: 'Courier New', Courier, monospace;
+        }
 
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg);
+            font-family: var(--font);
+            color: var(--text);
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* HUD LAYER */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none; /* Let clicks pass through */
+            z-index: 10;
+        }
+
+        .metric {
+            background: var(--ui-bg);
+            padding: 10px 15px;
+            border-left: 2px solid var(--accent);
+            margin-bottom: 10px;
+            backdrop-filter: blur(4px);
+            min-width: 180px;
+        }
+
+        .metric label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .metric .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* HEAT BAR (Health) */
+        #heat-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #heat-label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: var(--danger);
+            opacity: 0; /* Hidden unless heating up */
+            transition: opacity 0.3s;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--danger);
+        }
+
+        #heat-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        #heat-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--danger);
+            transition: width 0.1s linear, background-color 0.3s;
+            box-shadow: 0 0 10px var(--danger);
+        }
+
+        /* START / GAME OVER OVERLAY */
+        #overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: opacity 0.5s;
+        }
+
+        h1 {
+            font-size: 40px;
+            letter-spacing: 5px;
+            font-weight: normal;
+            margin: 0 0 20px 0;
+            color: var(--accent);
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        p {
+            color: #aaa;
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 500px;
+            font-size: 14px;
+        }
+
+        button {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 15px 50px;
+            font-family: var(--font);
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.5);
+        }
+
+        .hidden { 
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Helper for mobile tap targets */
+        .touch-hint {
+            display: none;
+        }
+        @media (hover: none) {
+            .touch-hint { display: block; font-size: 10px; color: #555; margin-top: 10px;}
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- UI HUD -->
+    <div id="hud">
+        <div class="metric">
+            <label>Data Collected</label>
+            <div class="value" id="score-val">0</div>
+        </div>
+        <div class="metric">
+            <label>Tunnel Velocity</label>
+            <div class="value"><span id="speed-val">0</span> <span style="font-size:12px; color:#888;">km/h</span></div>
+        </div>
+    </div>
+
+    <!-- HEAT INDICATOR -->
+    <div id="heat-container">
+        <div id="heat-label">ENGINE TEMP CRITICAL</div>
+        <div id="heat-bar-bg"><div id="heat-bar-fill"></div></div>
+    </div>
+
+    <!-- MENUS -->
+    <div id="overlay" class="visible">
+        <h1 id="title">Aero // Test</h1>
+        <p id="desc">
+            <strong>PROTOCOL:</strong><br><br>
+            Drag the F1 car to stay inside the moving <strong>BLUE ZONE</strong>.<br>
+            Collect aerodynamic data points.<br>
+            Staying outside the zone causes engine failure.
+        </p>
+        <button id="start-btn">Initialize Test</button>
+        <div class="touch-hint">Drag with finger to move</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+<script>
+    /** * ENGINE & CONFIGURATION 
+     */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI Elements
+    const uiScore = document.getElementById('score-val');
+    const uiSpeed = document.getElementById('speed-val');
+    const uiHeatFill = document.getElementById('heat-bar-fill');
+    const uiHeatLabel = document.getElementById('heat-label');
+    const overlay = document.getElementById('overlay');
+    const btn = document.getElementById('start-btn');
+    const title = document.getElementById('title');
+    const desc = document.getElementById('desc');
+
+    let width, height;
+    let isPlaying = false;
+    let animationId;
+
+    // Game Variables
+    let score = 0;
+    let heat = 0; // 0 to 100
+    let windSpeed = 15;
+    
+    // The "Zone" Mechanics
+    let zone = { y: 0, h: 220, speed: 2, dir: 1, color: 0 };
+    
+    // Car Mechanics
+    let car = { x: 0, y: 0, w: 260, h: 60 };
+    let isDragging = false;
+    let dragOffset = { x: 0, y: 0 };
+    
+    let particles = [];
+
+    // Initialize Canvas Size
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        
+        // Reset positions on resize
+        if(!isPlaying) {
+            car.x = width/2 - car.w/2;
+            car.y = height/2 - car.h/2;
+        }
+        // Keep zone accessible
+        if(zone.y > height) zone.y = height - zone.h;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    /**
+     * PHYSICS ENGINE (PARTICLE SYSTEM)
+     */
+    class Particle {
+        constructor() {
+            this.reset(true);
+        }
+
+        reset(randomX = false) {
+            this.x = randomX ? Math.random() * width : -50;
+            this.y = Math.random() * height;
+            this.vx = 0; 
+            this.vy = 0;
+            this.size = Math.random() * 2 + 1;
+            // Base speed variance for natural look
+            this.baseSpeed = Math.random() * 5; 
+            this.life = 0;
+        }
+
+        update() {
+            // 1. Base wind movement (Left to Right)
+            let targetVx = windSpeed + this.baseSpeed;
+            let targetVy = 0;
+
+            // 2. FLUID DYNAMICS APPROXIMATION (The "Warp")
+            const cx = car.x + car.w/2;
+            const cy = car.y + car.h/2;
+            
+            const dx = this.x - cx;
+            const dy = this.y - cy;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            // Influence Radius (Air gets pushed around this circle)
+            const radius = car.w * 0.55; 
+
+            if (dist < radius) {
+                // Force vector pointing away from car center
+                const force = (radius - dist) / radius;
+                const angle = Math.atan2(dy, dx);
+                
+                // Vertical deflection (Push air Up/Down strongly)
+                targetVy += Math.sin(angle) * force * windSpeed * 2.5;
+                
+                // Horizontal compression (Slow down in front (high pressure), speed up over top/bottom)
+                if (dx < 0) {
+                    // Stagnation point at nose
+                    targetVx -= Math.cos(angle) * force * windSpeed * 0.9;
+                } else {
+                    // Acceleration over bodywork
+                    targetVx += force * windSpeed * 0.5;
+                }
+            }
+
+            // 3. Dirty Air (Turbulence behind car)
+            // If behind car AND within height range
+            if (dx > 0 && dx < car.w * 3 && Math.abs(dy) < car.h) {
+                // Random jitter based on speed
+                if(Math.random() > 0.85) {
+                    targetVy += (Math.random() - 0.5) * windSpeed * 0.8;
+                }
+                // Wake drag (air moves slower immediately behind)
+                targetVx *= 0.95; 
+            }
+
+            // 4. Apply Velocity with Inertia (Smooths out the twitching)
+            this.vx += (targetVx - this.vx) * 0.2;
+            this.vy += (targetVy - this.vy) * 0.2;
+            
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // 5. Visual Logic
+            // If inside the "Zone", change color
+            const inZone = (car.y >= zone.y && car.y + car.h <= zone.y + zone.h);
+            
+            // Check if particle is near car to highlight flow
+            const nearCar = this.x > car.x - 50 && this.x < car.x + car.w + 100 && Math.abs(this.y - cy) < 100;
+            
+            if (nearCar) {
+                this.color = inZone ? 'rgba(0, 255, 204, 0.8)' : 'rgba(255, 50, 50, 0.6)';
+            } else {
+                this.color = 'rgba(255, 255, 255, 0.1)';
+            }
+
+            // Respawn if off screen
+            if (this.x > width || this.y < -100 || this.y > height + 100) this.reset();
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            // Stretch particle based on speed for motion blur effect
+            ctx.fillRect(this.x, this.y, this.vx * 1.2, this.size); 
+        }
+    }
+
+    /**
+     * RENDER FUNCTIONS
+     */
+    function drawCar() {
+        ctx.save();
+        ctx.translate(car.x, car.y);
+
+        // Heat Glow Effect on Car
+        if (heat > 0) {
+            ctx.shadowBlur = heat * 0.6;
+            ctx.shadowColor = '#ff3333';
+        }
+
+        // --- F1 2D MODEL (Programmatic Art) ---
+        ctx.fillStyle = '#e5e5e5'; // Silver body
+        
+        // 1. Main Body Shape
+        ctx.beginPath();
+        ctx.moveTo(0, 45); // Nose tip
+        ctx.lineTo(80, 40); // Nose cone
+        ctx.lineTo(120, 25); // Cockpit front
+        ctx.lineTo(160, 25); // Cockpit top
+        ctx.lineTo(220, 45); // Engine cover slope
+        ctx.lineTo(220, 20); // Rear wing strut
+        ctx.lineTo(240, 20); // Rear wing top
+        ctx.lineTo(240, 50); // Rear wing plate
+        ctx.lineTo(60, 50); // Floor/Undertray
+        ctx.closePath();
+        ctx.fill();
+
+        // 2. Front Wing (Accent Color)
+        ctx.fillStyle = '#00ffcc';
+        ctx.fillRect(0, 45, 50, 6);
+
+        // 3. Cockpit Halo
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(140, 25, 12, Math.PI, 0); // Semi-circle halo
+        ctx.stroke();
+
+        // 4. Wheels
+        ctx.fillStyle = '#1a1a1a';
+        // Front Wheel
+        ctx.beginPath(); ctx.arc(45, 50, 22, 0, Math.PI*2); ctx.fill();
+        // Rear Wheel
+        ctx.beginPath(); ctx.arc(200, 50, 22, 0, Math.PI*2); ctx.fill();
+
+        // 5. Rims (Visual cue for speed)
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 2;
+        // Simple rotating-looking rims
+        ctx.beginPath(); ctx.arc(45, 50, 14, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(200, 50, 14, 0, Math.PI*2); ctx.stroke();
+
+        ctx.restore();
+    }
+
+    function drawZone() {
+        // Draw the moving target area
+        // Background strip
+        ctx.fillStyle = 'rgba(0, 255, 204, 0.05)';
+        ctx.fillRect(0, zone.y, width, zone.h);
+        
+        // Dashed boundary lines
+        ctx.strokeStyle = 'rgba(0, 255, 204, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([10, 15]); // Dashed effect
+        
+        ctx.beginPath();
+        ctx.moveTo(0, zone.y); ctx.lineTo(width, zone.y);
+        ctx.moveTo(0, zone.y + zone.h); ctx.lineTo(width, zone.y + zone.h);
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset
+
+        // Label
+        ctx.fillStyle = 'rgba(0, 255, 204, 0.8)';
+        ctx.font = '10px Courier New';
+        ctx.fillText("OPTIMAL AERO ZONE", 20, zone.y + 15);
+    }
+
+    /**
+     * GAME LOGIC LOOP
+     */
+    function startGame() {
+        score = 0;
+        heat = 0;
+        windSpeed = 15;
+        particles = [];
+        
+        // Create 400 wind particles
+        for(let i=0; i<400; i++) particles.push(new Particle());
+        
+        isPlaying = true;
+        overlay.classList.remove('visible');
+        overlay.classList.add('hidden');
+        
+        animate();
+    }
+
+    function gameOver() {
+        isPlaying = false;
+        title.innerText = "TEST FAILED";
+        title.style.color = "#ff3333";
+        title.style.textShadow = "0 0 20px rgba(255, 50, 50, 0.4)";
+        desc.innerHTML = `Engine Overheated.<br><br>Final Data Points: <strong style="color:#fff; font-size:1.5em">${Math.floor(score)}</strong>`;
+        btn.innerText = "Re-Calibrate";
+        overlay.classList.remove('hidden');
+        overlay.classList.add('visible');
+    }
+
+    function updateGame() {
+        // 1. Move the Zone
+        zone.y += zone.speed * zone.dir;
+        
+        // Bounce Zone off top/bottom with padding
+        if (zone.y < 50) zone.dir = 1;
+        if (zone.y + zone.h > height - 50) zone.dir = -1;
+        
+        // Randomly change zone direction/speed to make it harder over time
+        if (Math.random() > 0.99) zone.dir *= -1;
+        // Slowly increase zone erratic movement based on score
+        if (Math.random() > 0.98) zone.speed = Math.random() * (2 + score/1000) + 1;
+
+        // 2. Check Collision (Is Car completely inside Zone?)
+        const inZone = (car.y >= zone.y && car.y + car.h <= zone.y + zone.h);
+
+        if (inZone) {
+            // Scoring
+            score += windSpeed / 10;
+            // Cooling
+            heat = Math.max(0, heat - 0.4); 
+            // Difficulty Ramp: Wind gets faster
+            windSpeed = Math.min(60, windSpeed + 0.02); 
+        } else {
+            // Heating
+            heat += 0.5; 
+        }
+
+        if (heat >= 100) gameOver();
+
+        // 3. Update UI
+        uiScore.innerText = Math.floor(score);
+        uiSpeed.innerText = Math.floor(windSpeed * 10);
+        uiHeatFill.style.width = heat + "%";
+        
+        // Heat bar visuals
+        if (heat > 0) {
+            uiHeatLabel.style.opacity = Math.min(1, heat / 50); // Fade in label
+            // Flash red if critical
+            if (heat > 80) {
+                 uiHeatFill.style.backgroundColor = (Math.floor(Date.now() / 100) % 2 === 0) ? '#ff0000' : '#ff5555';
+            } else {
+                uiHeatFill.style.backgroundColor = '#ff3333';
+            }
+        } else {
+            uiHeatLabel.style.opacity = 0;
+        }
+    }
+
+    function animate() {
+        if (!isPlaying) return;
+
+        // Clear Screen with slight opacity for "Trail/Motion Blur" effect
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.4)';
+        ctx.fillRect(0, 0, width, height);
+
+        updateGame();
+        drawZone();
+
+        // Draw and update particles
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        // Draw Car on top
+        drawCar();
+
+        animationId = requestAnimationFrame(animate);
+    }
+
+    /**
+     * INPUT HANDLING (Mouse & Touch)
+     */
+    btn.addEventListener('click', startGame);
+
+    function handleStart(x, y) {
+        if(!isPlaying) return;
+        // Hitbox check (slightly larger than car for easier grabbing)
+        if (x > car.x - 40 && x < car.x + car.w + 40 && 
+            y > car.y - 40 && y < car.y + car.h + 40) {
+            isDragging = true;
+            dragOffset.x = x - car.x;
+            dragOffset.y = y - car.y;
+            canvas.style.cursor = 'grabbing';
+        }
+    }
+
+    function handleMove(x, y) {
+        if (isDragging && isPlaying) {
+            car.x = x - dragOffset.x;
+            car.y = y - dragOffset.y;
+            
+            // Constrain to screen
+            if (car.y < 0) car.y = 0;
+            if (car.y > height - car.h) car.y = height - car.h;
+            if (car.x < 0) car.x = 0;
+            if (car.x > width - car.w) car.x = width - car.w;
+        }
+    }
+
+    function handleEnd() {
+        isDragging = false;
+        canvas.style.cursor = 'default';
+    }
+
+    // Mouse Events
+    window.addEventListener('mousedown', e => handleStart(e.clientX, e.clientY));
+    window.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
+    window.addEventListener('mouseup', handleEnd);
+
+    // Touch Events (for Mobile)
+    window.addEventListener('touchstart', e => {
+        handleStart(e.touches[0].clientX, e.touches[0].clientY);
+        // Prevent scrolling while playing
+        if(e.target === canvas) e.preventDefault(); 
+    }, {passive: false});
+    
+    window.addEventListener('touchmove', e => {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+        if(e.target === canvas) e.preventDefault();
+    }, {passive: false});
+    
+    window.addEventListener('touchend', handleEnd);
+
+</script>
+</body>
+</html>
