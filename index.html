@@ -548,26 +548,54 @@
         }
     });
 </script>
-<script>
-    // --- SECRET KEY SEQUENCE: QWERTY ---
-    const secretSequence = ['q', 'w', 'e', 'r', 't', 'y'];
-    let sequenceIndex = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QWERTY Trigger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    document.addEventListener('keydown', (e) => {
-        // Ignore typing in inputs/textareas
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
 
-        const key = e.key.toLowerCase();
+    <div>TYPE Q W E R T Y</div>
 
-        if (key === secretSequence[sequenceIndex]) {
-            sequenceIndex++;
+    <script>
+        // --- SECRET KEY SEQUENCE: QWERTY ---
+        const secretSequence = ['q', 'w', 'e', 'r', 't', 'y'];
+        let sequenceIndex = 0;
 
-            if (sequenceIndex === secretSequence.length) {
-                window.location.href = 'education/Loader.html';
+        document.addEventListener('keydown', (e) => {
+            // Ignore typing in inputs/textareas
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            const key = e.key.toLowerCase();
+
+            if (key === secretSequence[sequenceIndex]) {
+                sequenceIndex++;
+
+                if (sequenceIndex === secretSequence.length) {
+                    window.location.href = 'education/Loader.html';
+                    sequenceIndex = 0;
+                }
+            } else {
                 sequenceIndex = 0;
             }
-        } else {
-            sequenceIndex = 0;
-        }
-    });
-</script>
+        });
+    </script>
+
+</body>
+</html>
