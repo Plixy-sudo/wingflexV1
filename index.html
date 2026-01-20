@@ -72,7 +72,7 @@
             background: black;
         }
 
-        /* --- 4. NAVIGATION (Glassmorphism) --- */
+        /* --- 4. NAVIGATION --- */
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -86,261 +86,79 @@
         }
 
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        
-        .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
-
-        .nav-items a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
+        .nav-items a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         .nav-items a:hover { color: var(--text-primary); }
 
         /* --- 5. HERO SECTION --- */
-        .hero {
-            padding-top: 180px;
-            padding-bottom: 100px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 4.5rem;
-            line-height: 1.1;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease-out forwards;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-            opacity: 0;
-            animation: fadeUp 0.8s ease-out 0.2s forwards;
-        }
-
-        .hero-visual {
-            width: 100%;
-            height: 500px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-float);
-            opacity: 0;
-            animation: scaleReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
-        }
-
-        .hero-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 2s ease;
-        }
-
+        .hero { padding-top: 180px; padding-bottom: 100px; text-align: center; }
+        .hero h1 { font-size: 4.5rem; line-height: 1.1; font-weight: 800; letter-spacing: -2px; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease-out forwards; }
+        .hero p { font-size: 1.3rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.6; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s forwards; }
+        .hero-visual { width: 100%; height: 500px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-float); opacity: 0; animation: scaleReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; }
+        .hero-visual img { width: 100%; height: 100%; object-fit: cover; transition: transform 2s ease; }
         .hero-visual:hover img { transform: scale(1.05); }
 
         /* --- 6. GRID LAYOUT --- */
         .grid-section { padding: 8rem 0; }
-        
-        .section-header {
-            margin-bottom: 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
+        .section-header { margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end; }
         .section-header h2 { font-size: 2.5rem; letter-spacing: -1px; }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .card {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            border: 1px solid var(--border);
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-float);
-            border-color: transparent;
-        }
-
-        .card-img-container { height: 240px; overflow: hidden; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
         
-        .card-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
+        .card { background: var(--bg-surface); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: var(--transition-smooth); border: 1px solid var(--border); position: relative; }
+        .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-float); border-color: transparent; }
+        .card-img-container { height: 240px; overflow: hidden; }
+        .card-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img-container img { transform: scale(1.1); }
-
         .card-body { padding: 2rem; }
-
-        .tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
+        .tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--accent); margin-bottom: 1rem; display: block; }
         .card h3 { font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; }
         .card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-
-        .read-indicator {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: var(--transition-smooth);
-        }
-
+        .read-indicator { margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; opacity: 0; transform: translateX(-10px); transition: var(--transition-smooth); }
         .card:hover .read-indicator { opacity: 1; transform: translateX(0); }
 
-        /* --- 7. ANIMATED SCROLL REVEAL --- */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
+        /* --- 7. SCROLL UTILITIES --- */
+        .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
 
-        /* --- 8. MINIMALIST CALCULATOR --- */
-        .calculator-wrapper {
-            background: var(--text-primary);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .calculator-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(0,0,0,0) 50%);
-            pointer-events: none;
-        }
-
+        /* --- 8. CALCULATOR --- */
+        .calculator-wrapper { background: var(--text-primary); color: white; border-radius: var(--radius-lg); padding: 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; overflow: hidden; }
+        .calculator-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(0,0,0,0) 50%); pointer-events: none; }
         .calc-input-area { position: relative; z-index: 2; }
-        
-        .calc-input-wrapper {
-            position: relative;
-            margin-bottom: 2rem;
-        }
-
-        .calc-input-wrapper input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255,255,255,0.2);
-            font-size: 3rem;
-            color: white;
-            padding: 1rem 0;
-            font-family: var(--font-sans);
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
+        .calc-input-wrapper { position: relative; margin-bottom: 2rem; }
+        .calc-input-wrapper input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); font-size: 3rem; color: white; padding: 1rem 0; font-family: var(--font-sans); outline: none; transition: border-color 0.3s; }
         .calc-input-wrapper input:focus { border-bottom-color: var(--accent); }
-        
-        .calc-input-wrapper label {
-            position: absolute;
-            top: 0; left: 0;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .calc-btn {
-            background: white;
-            color: black;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .calc-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-        }
-
+        .calc-input-wrapper label { position: absolute; top: 0; left: 0; font-size: 0.9rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
+        .calc-btn { background: white; color: black; padding: 1rem 2.5rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); }
+        .calc-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
         .result-display { text-align: right; position: relative; z-index: 2; }
-
-        .big-number {
-            font-size: 8rem;
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -4px;
-            font-variant-numeric: tabular-nums;
-            background: linear-gradient(to bottom right, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
+        .big-number { font-size: 8rem; font-weight: 800; line-height: 1; letter-spacing: -4px; font-variant-numeric: tabular-nums; background: linear-gradient(to bottom right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .result-label { font-size: 1.5rem; color: rgba(255,255,255,0.6); }
 
-        /* --- 9. MODAL (READ MODE) --- */
+        /* --- 9. MODAL (SCROLLABLE FIX) --- */
         .modal-backdrop {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; 
+            width: 100%; 
+            height: 100%;
             background: rgba(255,255,255,0.95);
             z-index: 2000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s ease;
             backdrop-filter: blur(5px);
+            
+            /* KEY FIX: Enable vertical scrolling for the overlay */
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-backdrop.active { opacity: 1; pointer-events: all; }
 
         .modal-content {
             max-width: 800px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
+            margin: 4rem auto 8rem auto; /* Added margin to allow scrolling to top/bottom */
+            padding: 0 2rem;
             opacity: 0;
             transform: translateY(50px);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s;
@@ -362,6 +180,8 @@
             font-size: 1.5rem;
             transition: var(--transition-smooth);
             z-index: 2001;
+            /* Ensure button stays visible when scrolling */
+            box-shadow: var(--shadow-subtle);
         }
 
         .close-modal:hover { background: var(--text-primary); color: white; transform: rotate(90deg); }
@@ -386,6 +206,7 @@
             .big-number { font-size: 5rem; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .nav-items { display: none; }
+            .modal-content { margin-top: 6rem; } /* Make space for close button on mobile */
         }
     </style>
 </head>
@@ -393,10 +214,7 @@
 
     <nav>
         <div class="container nav-content">
-            <div class="logo">
-                <div class="logo-dot"></div>
-                WINGFLEX
-            </div>
+            <div class="logo"><div class="logo-dot"></div>WINGFLEX</div>
             <div class="nav-items">
                 <a href="#journal">Journal</a>
                 <a href="#simulation">Simulation</a>
@@ -409,9 +227,7 @@
         <h1>Bending the rules<br>of aerodynamics.</h1>
         <p>A deep dive into structural flexibility, load factors, and why modern planes are designed to act like giant springs.</p>
         <button class="btn" onclick="document.getElementById('journal').scrollIntoView()">Start Exploring</button>
-        
         <div style="height: 60px;"></div>
-
         <div class="hero-visual">
             <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Wing Flex">
         </div>
@@ -422,12 +238,9 @@
             <h2>The Engineering Journal</h2>
             <p style="color: var(--text-secondary)">Curated insights into aviation physics.</p>
         </div>
-
         <div class="cards-grid">
             <div class="card reveal-on-scroll" onclick="openModal(0)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="787 Wing">
-                </div>
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="787 Wing"></div>
                 <div class="card-body">
                     <span class="tag">Materials</span>
                     <h3>The Carbon Fiber Revolution</h3>
@@ -435,11 +248,8 @@
                     <div class="read-indicator">Read Article →</div>
                 </div>
             </div>
-
             <div class="card reveal-on-scroll" style="transition-delay: 100ms" onclick="openModal(1)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fighter Jet">
-                </div>
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fighter Jet"></div>
                 <div class="card-body">
                     <span class="tag">Physics</span>
                     <h3>Understanding Load Factor</h3>
@@ -447,11 +257,8 @@
                     <div class="read-indicator">Read Article →</div>
                 </div>
             </div>
-
             <div class="card reveal-on-scroll" style="transition-delay: 200ms" onclick="openModal(2)">
-                <div class="card-img-container">
-                    <img src="https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Turbulence">
-                </div>
+                <div class="card-img-container"><img src="https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Turbulence"></div>
                 <div class="card-body">
                     <span class="tag">Safety</span>
                     <h3>The "Ultimate Load" Test</h3>
@@ -475,7 +282,6 @@
                 </p>
                 <button class="calc-btn" onclick="animateCalculation()">Calculate Load</button>
             </div>
-            
             <div class="result-display">
                 <div class="big-number" id="gDisplay">1.41</div>
                 <div class="result-label">G-Force Load</div>
@@ -495,6 +301,9 @@
                 <span id="mTag" class="meta">CATEGORY</span>
                 <h1 id="mTitle">Article Title</h1>
                 <div id="mBody">Content goes here...</div>
+                <p>This aerodynamic capability is not just about comfort; it is about survival. During extreme turbulence, a rigid wing would encounter forces capable of snapping the main spar. A flexible wing, however, dissipates this energy.</p>
+                <p>Engineers use a concept called "Aeroelasticity" to model these behaviors. It is the interaction between aerodynamic forces, structural elasticity, and inertial forces. In the past, this was a danger zone (leading to flutter), but today it is a design feature.</p>
+                <p>Looking to the future, we are seeing the development of "morphing wings" — structures that can change their shape actively in flight, much like a bird, rather than just passively flexing under load. This represents the next frontier in aviation efficiency.</p>
             </div>
         </div>
     </div>
@@ -509,7 +318,7 @@
                 content: `
                     <p>The "Wingflex" phenomenon has become a signature visual of modern aviation, most notably with the Boeing 787 Dreamliner and Airbus A350. Unlike older aluminum aircraft, which were relatively rigid, these new aircraft utilize Carbon-Fiber Reinforced Polymer (CFRP) for their primary wing structures.</p>
                     <p><strong>Why Flexibility Matters?</strong><br>Imagine driving a car with no suspension over a pothole. It would be violent. Now imagine a car with soft springs. It glides. Wingflex acts as a massive aerodynamic shock absorber. When the plane hits a gust of wind, the wing bends, absorbing the energy rather than transferring it instantly to the fuselage. This results in a significantly smoother ride for passengers and less fatigue on the airframe.</p>
-                    <p>The tip of a 787 wing can flex upward by approximately 10 to 12 feet during normal flight operations, and much further during testing.</p>`
+                    <p>The tip of a 787 wing can flex upward by approximately 10 to 12 feet during normal flight operations, and much further during testing. This capability allows the aircraft to shed load during turbulence, effectively smoothing out the bumps in the sky.</p>`
             },
             {
                 title: "Understanding Load Factor",
@@ -518,7 +327,8 @@
                 content: `
                     <p>When pilots talk about "pulling Gs," they are referring to Load Factor. In straight and level flight, the wings support a load equal to the aircraft's weight (1G). However, turning requires a horizontal component of lift (centripetal force), which means the total lift generated must increase.</p>
                     <p>The math is governed by the equation: <code>Load Factor = 1 / cos(Bank Angle)</code>.</p>
-                    <p>At a 60-degree bank, the cosine is 0.5. Therefore, the load factor is 1 / 0.5 = 2. The wings are now supporting twice the weight of the aircraft. For a 300-ton jet, the wings effectively "feel" 600 tons of weight. This is why structural integrity is so vital, and why pilots must manage their speed and angle carefully to avoid overstressing the airframe.</p>`
+                    <p>At a 60-degree bank, the cosine is 0.5. Therefore, the load factor is 1 / 0.5 = 2. The wings are now supporting twice the weight of the aircraft. For a 300-ton jet, the wings effectively "feel" 600 tons of weight. This is why structural integrity is so vital, and why pilots must manage their speed and angle carefully to avoid overstressing the airframe.</p>
+                    <p>If you bank to 80 degrees, the load factor jumps to nearly 6Gs. Most commercial airliners are rated for +2.5G to -1G, which explains why airline pilots never bank beyond 30 degrees during normal operations.</p>`
             },
             {
                 title: "The Ultimate Load Test",
@@ -527,16 +337,12 @@
                 content: `
                     <p>Before a new aircraft type is certified to carry passengers, one airframe is sacrificed in the name of science. This is the Static Strength Test. The aircraft is placed in a rig, and hydraulic jacks pull the wings upward, simulating forces far beyond what nature can produce.</p>
                     <p><strong>Limit Load vs. Ultimate Load</strong><br>The "Limit Load" is the highest force expected in service (e.g., a massive storm). The "Ultimate Load" is 150% of that limit. The wing must hold the Ultimate Load for 3 seconds without failure.</p>
-                    <p>In the famous test of the Boeing 777, the wings were bent upward until the tips were higher than the fuselage roof. They finally snapped at 154% of the design limit, accompanied by a sound like a cannon shot. This proved the engineering models were incredibly accurate and the plane was safe.</p>`
+                    <p>In the famous test of the Boeing 777, the wings were bent upward until the tips were higher than the fuselage roof. They finally snapped at 154% of the design limit, accompanied by a sound like a cannon shot. This proved the engineering models were incredibly accurate and the plane was safe.</p>
+                    <p>Modern wings are so strong that the testing rig often breaks before the wing does. The flexibility you see in flight is well within the elastic limit of the materials, meaning they return to their original shape perfectly every time.</p>`
             }
         ];
 
         // --- SCROLL ANIMATIONS ---
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -544,7 +350,7 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
         document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 
@@ -553,35 +359,23 @@
             const input = document.getElementById('bankInput');
             const display = document.getElementById('gDisplay');
             let angle = parseFloat(input.value);
-
-            // Validation
             if (isNaN(angle) || angle < 0 || angle >= 90) {
-                input.style.borderBottomColor = '#ef4444'; // Red error
+                input.style.borderBottomColor = '#ef4444';
                 setTimeout(() => input.style.borderBottomColor = 'rgba(255,255,255,0.2)', 1000);
                 return;
             }
-
-            // Calculation
-            const rad = angle * (Math.PI / 180);
-            const target = 1 / Math.cos(rad);
-            
-            // Animation Loop
+            const target = 1 / Math.cos(angle * (Math.PI / 180));
             let current = 0;
-            const step = target / 30; // 30 frames approx
-            
+            const step = target / 30;
             function update() {
                 current += step;
-                if (current >= target) {
-                    display.textContent = target.toFixed(2);
-                } else {
-                    display.textContent = current.toFixed(2);
-                    requestAnimationFrame(update);
-                }
+                if (current >= target) display.textContent = target.toFixed(2);
+                else { display.textContent = current.toFixed(2); requestAnimationFrame(update); }
             }
             update();
         }
 
-        // --- MODAL LOGIC ---
+        // --- MODAL LOGIC (FIXED SCROLL) ---
         const backdrop = document.getElementById('modalBackdrop');
         const mImage = document.getElementById('mImage');
         const mTitle = document.getElementById('mTitle');
@@ -594,23 +388,20 @@
             mTitle.textContent = data.title;
             mTag.textContent = data.tag;
             mBody.innerHTML = data.content;
+            
             backdrop.classList.add('active');
+            // This prevents the background body from scrolling
             document.body.style.overflow = 'hidden'; 
         }
 
         function closeModal() {
             backdrop.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            // This allows the background body to scroll again
+            document.body.style.overflow = 'auto'; 
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) closeModal();
-        });
-
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
     </script>
 </body>
 </html>
