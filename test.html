@@ -593,3 +593,28 @@
 </script>
 </body>
 </html>
+<script>
+    // --- SECRET KEY SEQUENCE: QWERTY ---
+    const secretSequence = ['q', 'w', 'e', 'r', 't', 'y'];
+    let sequenceIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        // Ignore typing in inputs/textareas (future-proofing)
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        const key = e.key.toLowerCase();
+
+        if (key === secretSequence[sequenceIndex]) {
+            sequenceIndex++;
+
+            // Full sequence entered correctly
+            if (sequenceIndex === secretSequence.length) {
+                window.location.href = 'education/';
+                sequenceIndex = 0; // reset after success
+            }
+        } else {
+            // Wrong key → reset sequence
+            sequenceIndex = 0;
+        }
+    });
+</script>
