@@ -548,7 +548,7 @@
         }
     });
 </script>
-<script>
+<!--<script>
     document.addEventListener('keydown', (e) => {
         // Ignore typing in inputs/textareas
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -558,6 +558,30 @@
         }
     });
 </script>
+-->
+<script>
+    // Define the target sequence
+const secretCode = 'qwerty';
+let keyHistory = [];
 
+document.addEventListener('keydown', (e) => {
+    // 1. Safety check: Don't trigger if the user is typing in a text box
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    // 2. Add the current key to our history (converted to lowercase)
+    keyHistory.push(e.key.toLowerCase());
+
+    // 3. Keep the history array the same length as the secret code
+    if (keyHistory.length > secretCode.length) {
+        keyHistory.shift();
+    }
+
+    // 4. Check if the sequence matches
+    if (keyHistory.join('') === secretCode) {
+        // Navigate to the specific file path
+        window.location.href = 'Education/Loader.html';
+    }
+});
+</script>
 </body>
 </html>
