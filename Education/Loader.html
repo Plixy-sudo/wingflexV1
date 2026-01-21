@@ -3,73 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Input Example</title>
+    <title>Secured Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            padding: 50px;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
         }
 
-        /* Container to hold the input and the button */
-        .password-container {
-            position: relative;
-            max-width: 300px;
-        }
-
-        /* The actual input field */
-        #myPassword {
+        /* --- THE LOCK SCREEN (Flexy Design) --- */
+        #login-overlay {
+            /* This makes it cover the whole screen */
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 1000; /* Stays on top */
+            
+            /* FLEXBOX: Centers everything perfectly */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: #34495e;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        input {
             padding: 10px;
-            padding-right: 50px; /* Make room for the button */
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        /* The toggle button (Eye icon) */
-        .toggle-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 14px;
-            background: none;
+            border-radius: 5px;
             border: none;
-            color: #007BFF;
-            font-weight: bold;
+            width: 200px;
+            margin-bottom: 10px;
         }
 
-        .toggle-btn:hover {
-            color: #0056b3;
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #27ae60;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #2ecc71;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
+
+        /* --- THE SECRET CONTENT --- */
+        #secret-content {
+            display: none; /* Hidden by default! */
+            padding: 50px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h3>Login</h3>
-    
-    <div class="password-container">
-        <input type="password" id="myPassword" placeholder="Enter Password">
-        <button type="button" id="toggleBtn" class="toggle-btn" onclick="togglePassword()">Show</button>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>🔒 Restricted Access</h2>
+            <p>Enter password to unlock content</p>
+            <input type="password" id="passInput" placeholder="Password...">
+            <br>
+            <button onclick="checkPassword()">Unlock</button>
+            <p id="error" class="error-msg">Wrong Password!</p>
+        </div>
+    </div>
+
+    <div id="secret-content">
+        <h1>🎉 ACCESS GRANTED!</h1>
+        <p>You have successfully unlocked the secret page.</p>
+        <p>Here is the content that was hidden behind the lock screen.</p>
+        <img src="https://via.placeholder.com/400x200" alt="Secret Image">
     </div>
 
     <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById("myPassword");
-            var toggleButton = document.getElementById("toggleBtn");
+        function checkPassword() {
+            var input = document.getElementById("passInput").value;
+            var overlay = document.getElementById("login-overlay");
+            var content = document.getElementById("secret-content");
+            var error = document.getElementById("error");
 
-            // Check if the type is password
-            if (passwordInput.type === "password") {
-                // Switch to text (shows the password)
-                passwordInput.type = "text";
-                toggleButton.textContent = "Hide";
+            // --- CHANGE THE PASSWORD HERE ---
+            var correctPassword = "1234"; 
+
+            if (input === correctPassword) {
+                // If correct: Hide overlay, Show content
+                overlay.style.display = "none";
+                content.style.display = "block";
             } else {
-                // Switch back to password (hides it)
-                passwordInput.type = "password";
-                toggleButton.textContent = "Show";
+                // If wrong: Show error message
+                error.style.display = "block";
+                // Shake effect (optional logic)
+                document.getElementById("passInput").value = "";
+                document.getElementById("passInput").focus();
             }
         }
     </script>
