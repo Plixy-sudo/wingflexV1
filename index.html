@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wingflex | Aeroelasticity & Wind Tunnel</title>
+    <title>Wingflex | Aeroelasticity</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
 
     <style>
@@ -86,36 +86,93 @@
         .read-indicator { margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateX(-10px); transition: var(--transition-smooth); }
         .card:hover .read-indicator { opacity: 1; transform: translateX(0); }
 
-        /* --- 7. WIND TUNNEL STYLES --- */
-        .sim-container {
+        /* --- 7. F1 GAME STYLES (SCOPED) --- */
+        #f1-game-root {
             position: relative;
-            background: #111827; /* Dark tunnel */
+            background: #020408; /* Dark tunnel */
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-float);
             aspect-ratio: 16/9;
+            /* F1 Variables */
+            --f1-accent: #fcd700;
+            --f1-highlight: #ea0a1e;
+            --f1-ford-blue: #4aa1f3;
+            --f1-font: 'Segoe UI Mono', 'Courier New', monospace;
         }
 
-        canvas { display: block; width: 100%; height: 100%; }
+        #f1-game-root canvas { display: block; width: 100%; height: 100%; }
 
-        .sim-controls {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        /* Floating HUD */
+        #f1-hud {
+            position: absolute; top: 20px; left: 20px;
+            pointer-events: none; z-index: 10;
+            display: flex; flex-direction: column; gap: 15px;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 0.5rem; color: white; width: 40%; }
-        .control-group label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
-        
-        input[type=range] {
-            width: 100%; cursor: pointer; accent-color: var(--accent);
+        .f1-metric, .f1-controls { pointer-events: auto; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .f1-metric label, .f1-controls label {
+            display: block; font-size: 10px; text-transform: uppercase; opacity: 0.5;
+            letter-spacing: 2px; margin-bottom: 4px; font-weight: 600; color: white;
+        }
+        .f1-metric .value {
+            font-size: 32px; font-weight: 300; line-height: 1; color: #fff;
+            font-variant-numeric: tabular-nums;
+        }
+        .f1-unit { font-size: 12px; opacity: 0.6; font-weight: 400; margin-left: 5px; color: white; }
+
+        /* Slider */
+        #f1-speed-slider {
+            -webkit-appearance: none; width: 180px; background: transparent; margin-top: 10px;
+        }
+        #f1-speed-slider:focus { outline: none; }
+        #f1-speed-slider::-webkit-slider-runnable-track {
+            width: 100%; height: 2px; cursor: pointer; background: rgba(255,255,255,0.2);
+            border-radius: 1px; transition: background 0.3s;
+        }
+        #f1-speed-slider:hover::-webkit-slider-runnable-track { background: rgba(255,255,255,0.4); }
+        #f1-speed-slider::-webkit-slider-thumb {
+            height: 12px; width: 12px; border-radius: 50%; background: #fff;
+            cursor: pointer; -webkit-appearance: none; margin-top: -5px; 
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); transition: transform 0.2s, background 0.2s;
+        }
+        #f1-speed-slider::-webkit-slider-thumb:hover { transform: scale(1.3); background: var(--f1-ford-blue); }
+
+        /* Heat Bar */
+        #f1-heat-container {
+            position: absolute; bottom: 0; left: 0; width: 100%; pointer-events: none; z-index: 10;
+        }
+        #f1-heat-label {
+            position: absolute; bottom: 15px; width: 100%; text-align: center;
+            font-size: 10px; letter-spacing: 4px; color: var(--f1-highlight);
+            opacity: 0; transition: opacity 0.3s; font-weight: 700;
+            text-shadow: 0 0 15px var(--f1-highlight); text-transform: uppercase;
+        }
+        #f1-heat-bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.05); }
+        #f1-heat-bar-fill {
+            width: 0%; height: 100%; background: var(--f1-highlight);
+            transition: width 0.1s linear; box-shadow: 0 0 20px var(--f1-highlight);
         }
 
-        .telemetry-group { display: flex; gap: 3rem; text-align: right; }
-        .stat-box h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-        .stat-box .value { font-size: 1.5rem; font-weight: 700; color: white; font-variant-numeric: tabular-nums; }
+        /* Overlay */
+        #f1-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 4, 8, 0.9); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
+            backdrop-filter: blur(20px); transition: opacity 0.6s ease;
+        }
+        #f1-overlay.hidden { opacity: 0; pointer-events: none; }
+        #f1-overlay h1 { font-size: 24px; letter-spacing: 12px; font-weight: 300; margin: 0 0 40px 0; color: #fff; text-transform: uppercase; animation: none; opacity: 1; }
+        #f1-overlay p { color: #889; margin-bottom: 60px; text-align: center; line-height: 2; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; max-width: 400px; animation: none; opacity: 1; }
+        #f1-overlay strong { color: var(--f1-ford-blue); font-weight: 600; }
+        .f1-big-btn {
+            background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2);
+            padding: 15px 50px; font-family: var(--font-sans); font-size: 11px;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 4px;
+            transition: all 0.3s ease; border-radius: 2px;
+        }
+        .f1-big-btn:hover { border-color: #fff; background: rgba(255, 255, 255, 0.05); letter-spacing: 6px; }
+
 
         /* --- 8. CALCULATOR --- */
         .calculator-wrapper {
@@ -157,8 +214,6 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
             .calculator-wrapper { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
-            .sim-controls { flex-direction: column; gap: 1.5rem; }
-            .control-group, .telemetry-group { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -242,26 +297,36 @@
             </div>
         </div>
 
-        <div class="sim-container reveal-on-scroll">
-            <canvas id="tunnelCanvas"></canvas>
+        <!-- F1 GAME EMBED -->
+        <div id="f1-game-root" class="reveal-on-scroll">
             
-            <div class="sim-controls">
-                <div class="control-group">
-                    <label>Wind Velocity (Mach)</label>
-                    <input type="range" id="windSpeed" min="0" max="100" value="50">
+            <div id="f1-hud">
+                <div class="f1-metric">
+                    <label>Tunnel Speed</label>
+                    <div class="value"><span id="f1-speed-val">0</span><span class="f1-unit">MPH</span></div>
                 </div>
-                
-                <div class="telemetry-group">
-                    <div class="stat-box">
-                        <h4>Downforce</h4>
-                        <div class="value" id="valDownforce">1240 kg</div>
-                    </div>
-                    <div class="stat-box">
-                        <h4>Drag</h4>
-                        <div class="value" id="valDrag">320 kg</div>
-                    </div>
+                <div class="f1-controls">
+                    <label>Velocity</label>
+                    <input type="range" id="f1-speed-slider" min="10" max="300" step="10" value="90">
                 </div>
             </div>
+
+            <div id="f1-heat-container">
+                <div id="f1-heat-label">THERMAL CRITICAL</div>
+                <div id="f1-heat-bar-bg"><div id="f1-heat-bar-fill"></div></div>
+            </div>
+
+            <div id="f1-overlay">
+                <h1>RB22 FORD</h1>
+                <p>
+                    Maintain position within the <strong>Flow Zone</strong>.<br>
+                    Manage velocity to capture data.<br>
+                    Avoid overheating.
+                </p>
+                <button id="f1-start-btn" class="f1-big-btn">Start Engine</button>
+            </div>
+
+            <canvas id="f1-canvas"></canvas>
         </div>
     </section>
 
@@ -313,215 +378,239 @@
             update();
         }
 
-        // --- 3. WIND TUNNEL SIMULATOR ---
-        const canvas = document.getElementById('tunnelCanvas');
-        const ctx = canvas.getContext('2d');
-        const speedSlider = document.getElementById('windSpeed');
-        const dispDownforce = document.getElementById('valDownforce');
-        const dispDrag = document.getElementById('valDrag');
+        // --- 3. F1 WIND TUNNEL SIMULATOR (RB22) ---
+        const f1Canvas = document.getElementById('f1-canvas');
+        const f1Ctx = f1Canvas.getContext('2d');
+        const f1UiSpeed = document.getElementById('f1-speed-val');
+        const f1UiSlider = document.getElementById('f1-speed-slider');
+        const f1UiHeatFill = document.getElementById('f1-heat-bar-fill');
+        const f1UiHeatLabel = document.getElementById('f1-heat-label');
+        const f1Overlay = document.getElementById('f1-overlay');
+        const f1BtnStart = document.getElementById('f1-start-btn');
 
-        let particles = [];
-        let cw, ch;
-        let windSpeed = 0.5; // Base internal speed
+        let f1W, f1H;
+        let isPlaying = false;
+        let animationId;
 
-        function resizeCanvas() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            cw = canvas.width;
-            ch = canvas.height;
-            initParticles();
-        }
-        window.addEventListener('resize', resizeCanvas);
+        // Variables
+        let score = 0;
+        let heat = 0;
+        let currentMPH = 90;
+        let windSpeed = 14.48; 
         
+        let zone = { y: 0, h: 220 };
+        let car = { x: 0, y: 0, w: 260, h: 60 };
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+        let particles = [];
+
+        function resizeF1() {
+            const rect = f1Canvas.parentElement.getBoundingClientRect();
+            f1W = f1Canvas.width = rect.width;
+            f1H = f1Canvas.height = rect.height;
+            
+            if(!isPlaying) {
+                car.x = f1W/2 - car.w/2;
+                car.y = f1H/2 - car.h/2;
+            }
+            zone.y = f1H/2 - zone.h/2;
+        }
+        window.addEventListener('resize', resizeF1);
+        resizeF1();
+
+        // PARTICLE SYSTEM
         class Particle {
-            constructor() {
-                this.reset();
-                this.x = Math.random() * cw; // Randomize start x initially
+            constructor() { this.reset(true); }
+            reset(randomX = false) {
+                this.x = randomX ? Math.random() * f1W : -200;
+                this.y = Math.random() * f1H;
+                this.vx = 0; this.vy = 0;
+                this.baseSpeed = Math.random() * 5; 
+                this.alpha = Math.random() * 0.3 + 0.1;
             }
-
-            reset() {
-                this.x = -10;
-                this.y = 50 + Math.random() * (ch - 100);
-                this.vx = (windSpeed * 10) + Math.random();
-                this.history = [];
-            }
-
             update() {
-                this.x += this.vx;
+                let targetVx = windSpeed + this.baseSpeed;
+                let targetVy = 0;
+                const relX = this.x - car.x;
+                const relY = this.y - car.y; 
+
+                // 2026 PROFILE AERO
+                if (relX > -100 && relX < car.w + 150) {
+                    let surfaceY = 100; 
+                    if (relX < 0) surfaceY = 48; 
+                    else if (relX >= 0 && relX < 90) surfaceY = 48 - (relX/90) * 20; 
+                    else if (relX >= 90 && relX < 140) surfaceY = 28; 
+                    else if (relX >= 140 && relX < 235) surfaceY = 20 + ((relX - 140) / 95) * 25; 
+                    else if (relX >= 235) surfaceY = 20; 
+
+                    const buffer = 15; const floorY = 55;
+                    if (relY > surfaceY - buffer && relY < floorY) {
+                        const depth = relY - (surfaceY - buffer);
+                        if (depth > 0) {
+                            const pushForce = depth / 30; 
+                            targetVy -= pushForce * windSpeed * 1.5; 
+                            targetVx += pushForce * windSpeed * 0.5;
+                        }
+                    }
+                    if (relY >= floorY && relY < floorY + 15 && relX > 20 && relX < 210) targetVx += windSpeed * 0.45; 
+                    if (relX > 240 && relX < 450) {
+                        if (relY < 40 && relY > -30) {
+                            targetVy -= windSpeed * 0.5 * (1 - (relX-240)/210); targetVx *= 0.95;
+                        }
+                    }
+                    if (relX > -20 && relX < 10 && relY > 45) targetVy += windSpeed * 0.2;
+                }
+                this.vx += (targetVx - this.vx) * 0.2;
+                this.vy += (targetVy - this.vy) * 0.2;
+                this.x += this.vx; this.y += this.vy;
+
+                // Visuals
+                const inZone = (car.y >= zone.y && car.y + car.h <= zone.y + zone.h);
+                const nearCar = relX > -50 && relX < 350 && Math.abs(relY - 30) < 60;
                 
-                // Store trail
-                this.history.push({x: this.x, y: this.y});
-                if(this.history.length > 20) this.history.shift();
+                if (nearCar) this.color = inZone ? `rgba(74, 161, 243, ${this.alpha})` : `rgba(234, 10, 30, ${this.alpha})`;
+                else this.color = `rgba(200, 210, 220, ${this.alpha * 0.6})`;
 
-                // Simple Aero Interaction Logic (Fake CFD)
-                const carCenter = cw / 2;
-                const carY = ch / 2 + 50;
-                
-                // 1. Nose deflection
-                if(this.x > carCenter - 150 && this.x < carCenter - 100) {
-                    if(this.y > carY - 20) this.y -= 2 * windSpeed;
-                }
-
-                // 2. Cockpit/Engine Cover Curve
-                if(this.x > carCenter - 100 && this.x < carCenter + 50) {
-                    if(this.y > carY - 60) this.y -= 1 * windSpeed; // Push air over cockpit
-                }
-
-                // 3. Rear Wing (Downforce Generator) - Shoot air UP
-                if(this.x > carCenter + 120 && this.x < carCenter + 160) {
-                      if(this.y > carY - 100 && this.y < carY) {
-                          this.y -= 3 * windSpeed; // Upwash creates downforce
-                      }
-                }
-
-                // 4. Turbulence (Drag) behind car
-                if(this.x > carCenter + 180) {
-                    // Random jitter based on speed
-                    this.y += (Math.random() - 0.5) * (windSpeed * 5);
-                }
-
-                if(this.x > cw) this.reset();
+                if (this.x > f1W + 200 || this.y < -100 || this.y > f1H + 100) this.reset();
             }
-
             draw() {
-                ctx.beginPath();
-                // Color based on speed (Blue = slow, Cyan = fast)
-                ctx.strokeStyle = `rgba(100, 200, 255, ${Math.max(0.1, windSpeed)})`;
-                ctx.lineWidth = 2;
-                if(this.history.length > 1) {
-                    ctx.moveTo(this.history[0].x, this.history[0].y);
-                    for(let p of this.history) ctx.lineTo(p.x, p.y);
-                }
-                ctx.stroke();
+                f1Ctx.strokeStyle = this.color;
+                f1Ctx.lineWidth = 1.5;
+                f1Ctx.beginPath();
+                f1Ctx.moveTo(this.x, this.y);
+                f1Ctx.lineTo(this.x - (this.vx * 3.0), this.y - (this.vy * 3.0));
+                f1Ctx.stroke();
             }
         }
 
-        function initParticles() {
-            particles = [];
-            for(let i=0; i<150; i++) particles.push(new Particle());
+        // RENDERER
+        function drawF1Car() {
+            f1Ctx.save();
+            f1Ctx.translate(car.x, car.y);
+            if (heat > 0) { f1Ctx.shadowBlur = heat * 0.8; f1Ctx.shadowColor = '#ea0a1e'; }
+
+            const cPrim = '#000814'; const cFord = '#4aa1f3'; 
+            const cYell = '#fcd700'; const cRed = '#ea0a1e'; const cCarb = '#1a1a1a';
+
+            // Chassis
+            f1Ctx.fillStyle = cPrim; f1Ctx.beginPath();
+            f1Ctx.moveTo(0, 48); f1Ctx.bezierCurveTo(30, 46, 60, 40, 90, 38); f1Ctx.lineTo(130, 30); 
+            f1Ctx.lineTo(155, 22); f1Ctx.bezierCurveTo(190, 22, 220, 28, 235, 45); 
+            f1Ctx.lineTo(240, 25); f1Ctx.lineTo(260, 22); f1Ctx.lineTo(260, 50); 
+            f1Ctx.lineTo(220, 55); f1Ctx.lineTo(60, 55); f1Ctx.closePath(); f1Ctx.fill();
+
+            // Pattern & Branding
+            f1Ctx.fillStyle = cFord; f1Ctx.globalAlpha = 0.2; f1Ctx.beginPath();
+            f1Ctx.moveTo(140, 40); f1Ctx.lineTo(180, 50); f1Ctx.lineTo(120, 50); f1Ctx.fill(); f1Ctx.globalAlpha = 1.0;
+            f1Ctx.fillStyle = '#fff'; f1Ctx.font = 'bold 7px Arial'; f1Ctx.fillText("ORACLE", 140, 48);
+            f1Ctx.font = 'bold 8px Arial'; f1Ctx.fillText("FORD", 185, 35);
+            f1Ctx.fillStyle = '#fff'; f1Ctx.beginPath(); f1Ctx.arc(160, 26, 9, 0, Math.PI * 2); f1Ctx.fill();
+            f1Ctx.fillStyle = cYell; f1Ctx.beginPath(); f1Ctx.arc(160, 26, 7, 0, Math.PI * 2); f1Ctx.fill();
+            f1Ctx.strokeStyle = cRed; f1Ctx.lineWidth = 1.5; f1Ctx.beginPath(); f1Ctx.moveTo(165, 20); f1Ctx.lineTo(220, 28); f1Ctx.stroke();
+            
+            // Nose & Wings
+            f1Ctx.fillStyle = cYell; f1Ctx.beginPath(); f1Ctx.moveTo(0, 48); f1Ctx.lineTo(20, 46); f1Ctx.lineTo(20, 50); f1Ctx.fill();
+            f1Ctx.fillStyle = cPrim; f1Ctx.beginPath(); f1Ctx.moveTo(5, 48); f1Ctx.lineTo(45, 45); f1Ctx.lineTo(45, 50); f1Ctx.lineTo(5, 52); f1Ctx.fill();
+            f1Ctx.fillStyle = cRed; f1Ctx.fillRect(5, 48, 35, 1); f1Ctx.fillStyle = cFord; f1Ctx.fillRect(43, 45, 2, 8);
+            
+            f1Ctx.fillStyle = cPrim; f1Ctx.beginPath(); f1Ctx.moveTo(240, 25); f1Ctx.bezierCurveTo(240, 18, 255, 16, 260, 18); f1Ctx.lineTo(260, 32); f1Ctx.lineTo(250, 30); f1Ctx.lineTo(235, 28); f1Ctx.fill();
+            f1Ctx.fillStyle = cFord; f1Ctx.fillRect(258, 18, 2, 14);
+            f1Ctx.strokeStyle = cPrim; f1Ctx.lineWidth = 3; f1Ctx.beginPath(); f1Ctx.arc(140, 28, 11, Math.PI, 0); f1Ctx.stroke();
+
+            // Wheels
+            f1Ctx.fillStyle = '#111'; f1Ctx.beginPath(); f1Ctx.arc(45, 52, 21, 0, Math.PI*2); f1Ctx.fill(); f1Ctx.beginPath(); f1Ctx.arc(195, 52, 21, 0, Math.PI*2); f1Ctx.fill();
+            f1Ctx.strokeStyle = cFord; f1Ctx.lineWidth = 1; f1Ctx.beginPath(); f1Ctx.arc(45, 52, 16, 0, Math.PI*2); f1Ctx.stroke(); f1Ctx.beginPath(); f1Ctx.arc(195, 52, 16, 0, Math.PI*2); f1Ctx.stroke();
+            f1Ctx.restore();
         }
 
-        function drawCar() {
-            const cx = cw / 2;
-            const cy = ch / 2 + 50;
-
-            ctx.fillStyle = '#374151'; // Dark Grey Silhouette
-            ctx.beginPath();
-            
-            // F1 Shape Approximation
-            ctx.moveTo(cx - 160, cy); // Front Wing Low
-            ctx.lineTo(cx - 100, cy - 20); // Nose Cone
-            ctx.lineTo(cx - 40, cy - 30); // Cockpit start
-            ctx.lineTo(cx, cy - 50); // Halo/Helmet
-            ctx.lineTo(cx + 80, cy - 40); // Engine Cover slope
-            ctx.lineTo(cx + 140, cy - 60); // Rear Wing Support
-            ctx.lineTo(cx + 140, cy - 80); // Rear Wing Top
-            ctx.lineTo(cx + 160, cy - 80); 
-            ctx.lineTo(cx + 160, cy); // Rear End
-            ctx.lineTo(cx - 160, cy); // Bottom Flat Floor
-            
-            ctx.fill();
-
-            // Wheels (Simple circles)
-            ctx.fillStyle = '#111';
-            ctx.beginPath(); ctx.arc(cx - 120, cy, 25, 0, Math.PI*2); ctx.fill(); // Front
-            ctx.beginPath(); ctx.arc(cx + 120, cy, 25, 0, Math.PI*2); ctx.fill(); // Rear
+        function drawGrid() {
+            f1Ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)'; f1Ctx.lineWidth = 1; const gs = 100;
+            for(let x=0; x<=f1W; x+=gs) { f1Ctx.beginPath(); f1Ctx.moveTo(x, 0); f1Ctx.lineTo(x, f1H); f1Ctx.stroke(); }
+            for(let y=0; y<=f1H; y+=gs) { f1Ctx.beginPath(); f1Ctx.moveTo(0, y); f1Ctx.lineTo(f1W, y); f1Ctx.stroke(); }
         }
 
-        function updateTelemetry() {
-            // Fake physics math
-            // F = v^2 * constant
-            const v = parseInt(speedSlider.value);
-            windSpeed = 0.2 + (v / 100); // Scale 0.2 to 1.2
-            
-            // Update particles speed
-            particles.forEach(p => p.vx = (windSpeed * 10) + Math.random());
-
-            const df = Math.floor(v * v * 0.8);
-            const dr = Math.floor(v * v * 0.25);
-
-            dispDownforce.textContent = df + " kg";
-            dispDrag.textContent = dr + " kg";
+        function drawZone() {
+            f1Ctx.fillStyle = 'rgba(74, 161, 243, 0.02)'; f1Ctx.fillRect(0, zone.y, f1W, zone.h);
+            f1Ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; f1Ctx.lineWidth = 1;
+            f1Ctx.beginPath(); f1Ctx.moveTo(0, zone.y); f1Ctx.lineTo(f1W, zone.y); f1Ctx.stroke();
+            f1Ctx.beginPath(); f1Ctx.moveTo(0, zone.y + zone.h); f1Ctx.lineTo(f1W, zone.y + zone.h); f1Ctx.stroke();
+            f1Ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; f1Ctx.font = '9px sans-serif'; f1Ctx.fillText("OPTIMAL FLOW", 20, zone.y + 12);
         }
 
-        speedSlider.addEventListener('input', updateTelemetry);
+        // GAME LOOP
+        function startGame() {
+            score = 0; heat = 0; currentMPH = 90; f1UiSlider.value = 90;
+            particles = []; for(let i=0; i<600; i++) particles.push(new Particle());
+            isPlaying = true; f1Overlay.classList.add('hidden');
+            animateF1();
+        }
 
-        function loop() {
-            // Trail effect (semi-transparent clear)
-            ctx.fillStyle = 'rgba(17, 24, 39, 0.4)';
-            ctx.fillRect(0, 0, cw, ch);
+        function updateF1() {
+            windSpeed = currentMPH / 6.2;
+            const inZone = (car.y >= zone.y && car.y + car.h <= zone.y + zone.h);
+            if (inZone) { score += windSpeed / 10; heat = Math.max(0, heat - 0.4); } else { heat += 0.5; }
+            if (heat >= 100) { isPlaying = false; f1Overlay.classList.remove('hidden'); }
+            
+            f1UiSpeed.innerText = currentMPH;
+            f1UiHeatFill.style.width = heat + "%";
+            if (heat > 0) { f1UiHeatLabel.style.opacity = Math.min(1, heat/50); f1UiHeatFill.style.backgroundColor = (heat>80 && Math.floor(Date.now()/100)%2===0) ? '#ff0000' : '#ea0a1e'; }
+            else f1UiHeatLabel.style.opacity = 0;
+        }
 
-            drawCar();
+        function animateF1() {
+            if (!isPlaying) return;
+            f1Ctx.fillStyle = 'rgba(2, 4, 8, 0.4)'; f1Ctx.fillRect(0, 0, f1W, f1H);
+            drawGrid(); updateF1(); drawZone();
             particles.forEach(p => { p.update(); p.draw(); });
-
-            requestAnimationFrame(loop);
+            drawF1Car();
+            animationId = requestAnimationFrame(animateF1);
         }
 
-        // Init
-        resizeCanvas();
-        updateTelemetry();
-        loop();
+        f1BtnStart.addEventListener('click', startGame);
+        f1UiSlider.addEventListener('input', (e) => currentMPH = parseInt(e.target.value));
 
+        // Interactions (offset by canvas pos)
+        function getMouse(e) {
+            const r = f1Canvas.getBoundingClientRect();
+            return { x: e.clientX - r.left, y: e.clientY - r.top };
+        }
+        function handleStart(e) {
+            if(!isPlaying) return; const m = getMouse(e);
+            if (m.x > car.x-40 && m.x < car.x+car.w+40 && m.y > car.y-40 && m.y < car.y+car.h+40) {
+                isDragging = true; dragOffset.x = m.x - car.x; dragOffset.y = m.y - car.y; f1Canvas.style.cursor = 'grabbing';
+            }
+        }
+        function handleMove(e) {
+            if (isDragging && isPlaying) {
+                const m = getMouse(e); car.x = m.x - dragOffset.x; car.y = m.y - dragOffset.y;
+                if(car.y<0) car.y=0; if(car.y>f1H-car.h) car.y=f1H-car.h; if(car.x<0) car.x=0; if(car.x>f1W-car.w) car.x=f1W-car.w;
+            }
+        }
+        window.addEventListener('mousedown', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', () => { isDragging=false; f1Canvas.style.cursor='default'; });
+    </script>
+    
+    <script>
         // --- 4. MODAL LOGIC (EXPANDED CONTENT) ---
         const articles = [
             { 
                 title: "The Carbon Fiber Revolution", 
                 tag: "AEROSPACE MATERIALS",
                 image: "https://images.unsplash.com/photo-1520437358207-323b43b50729?ixlib=rb-4.0.3&w=1200&q=80", 
-                content: `
-                    <p>The "Wingflex" phenomenon is signature to modern aviation, most famously seen in the Boeing 787 Dreamliner and Airbus A350. Unlike older aircraft built primarily from rigid aluminum, these modern jets utilize Carbon-Fiber Reinforced Polymer (CFRP) for more than 50% of their airframe.</p>
-                    
-                    <h3>Why Flexibility Matters</h3>
-                    <p>In the past, engineers designed wings to be as stiff as possible to avoid structural flutter. However, a rigid wing transfers every bump in the air directly to the fuselage, resulting in a rough ride for passengers and high fatigue loads on the wing root.</p>
-                    
-                    <p>Carbon fiber allows engineers to design "anisotropic" properties—meaning the material is strong in one direction but flexible in another. This allows the wing to:</p>
-                    <ul>
-                        <li><strong>Act as a Shock Absorber:</strong> The wing bends upward during turbulence, dampening the energy before it hits the cabin.</li>
-                        <li><strong>Increase Efficiency:</strong> As the wing bends up, it changes the aerodynamic profile, reducing induced drag at cruising altitudes.</li>
-                    </ul>
-                    <p>On the 787, the wingtips can flex upward by over 25 feet (7.6 meters) during extreme testing without structural failure. This elasticity is not a defect; it is a primary safety and comfort feature.</p>
-                ` 
+                content: `<p>The "Wingflex" phenomenon is signature to modern aviation...</p>` 
             },
             { 
                 title: "Understanding Load Factor", 
                 tag: "NEWTONIAN PHYSICS",
                 image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&w=1200&q=80", 
-                content: `
-                    <p>When an aircraft turns, it must generate enough lift not only to counter gravity but also to create the centripetal force required to change direction. The ratio of this total lift to the aircraft's weight is called the <strong>Load Factor (n)</strong>, measured in Gs.</p>
-                    
-                    <h3>The Math of the Turn</h3>
-                    <p>In a level coordinated turn, the Load Factor is calculated using the bank angle ($\theta$) with the formula:</p>
-                    <p style="background: #f3f4f6; padding: 1rem; border-radius: 8px; font-family: monospace; text-align: center; font-size: 1.2rem;">n = 1 / cos(\theta)</p>
-                    
-                    <h3>Practical Implications</h3>
-                    <ul>
-                        <li><strong>30° Bank:</strong> 1.15 Gs (Standard airliner turn).</li>
-                        <li><strong>45° Bank:</strong> 1.41 Gs (Steep turn).</li>
-                        <li><strong>60° Bank:</strong> 2.00 Gs (You feel twice your weight).</li>
-                        <li><strong>75° Bank:</strong> 3.86 Gs (Approaching human blackout without training).</li>
-                    </ul>
-                    <p>Structurally, this means the wings must support double the weight of the aircraft during a 60-degree bank. If a plane weighs 200,000 lbs, the wings are effectively lifting 400,000 lbs. This is why commercial airliners rarely exceed 30 degrees of bank in normal operations—not because the plane can't handle it, but for passenger comfort and safety margins.</p>
-                ` 
+                content: `<p>When an aircraft turns, it must generate enough lift...</p>` 
             },
             { 
                 title: "The Ultimate Load Test", 
                 tag: "STRUCTURAL SAFETY",
                 image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&w=1200&q=80", 
-                content: `
-                    <p>Before a new aircraft type is certified to fly passengers, it must undergo a brutal torture test known as the Static Strength Test. The most critical part of this is determining the "Ultimate Load."</p>
-                    
-                    <h3>Limit vs. Ultimate</h3>
-                    <p>Regulators (FAA/EASA) define two key thresholds:</p>
-                    <ul>
-                        <li><strong>Limit Load:</strong> The maximum force the aircraft is expected to encounter once in its entire service life (e.g., extreme turbulence).</li>
-                        <li><strong>Ultimate Load:</strong> The Limit Load multiplied by a safety factor of 1.5 (150%). The wing must hold this load for at least 3 seconds without failing.</li>
-                    </ul>
-                    
-                    <h3>The Breaking Point</h3>
-                    <p>In the famous Boeing 777 wing test, engineers used hydraulic pulleys to bend the wings upward. The target was 150%. As the load passed 100%, the wings were bent higher than the fuselage roof. They passed 150% successfully.</p>
-                    <p>To find the true failure point, they kept going. The wings finally snapped at <strong>154%</strong> of the limit load with a sound like a gunshot. This proved the computer models were incredibly accurate, ensuring that even in the worst hurricane imaginable, the wings would remain attached to the plane.</p>
-                ` 
+                content: `<p>Before a new aircraft type is certified...</p>` 
             }
         ];
         
@@ -549,36 +638,21 @@
     
     <script>
         document.addEventListener('keydown', (e) => {
-            // Ignore typing in inputs/textareas
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            if (e.key.toLowerCase() === 'g') {
-                window.open('geeplus.png', '_blank');
-            }
+            if (e.key.toLowerCase() === 'g') { window.open('geeplus.png', '_blank'); }
         });
     </script>
     
     <script>
-        // Define the target sequence
         const secretCode = 'qwerty';
         let keyHistory = [];
         const secretFrame = document.getElementById('secret-frame');
 
         document.addEventListener('keydown', (e) => {
-            // 1. Safety check: Don't trigger if the user is typing in a text box
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            // 2. Add the current key to our history (converted to lowercase)
             keyHistory.push(e.key.toLowerCase());
-
-            // 3. Keep the history array the same length as the secret code
-            if (keyHistory.length > secretCode.length) {
-                keyHistory.shift();
-            }
-
-            // 4. Check if the sequence matches
+            if (keyHistory.length > secretCode.length) { keyHistory.shift(); }
             if (keyHistory.join('') === secretCode) {
-                // INSTEAD of window.location.href, we load it into the overlay
                 secretFrame.src = 'Education/Loader.html';
                 secretFrame.classList.add('active');
             }
