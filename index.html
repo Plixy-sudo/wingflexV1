@@ -22,16 +22,6 @@
             --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* DARK THEME OVERRIDES */
-        [data-theme="dark"] {
-            --bg-body: #0f1115;
-            --bg-surface: #181b21;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --border: #2d3748;
-            --shadow-float: 0 20px 25px -5px rgba(0,0,0,0.5);
-        }
-
         html { scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -41,12 +31,6 @@
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* CLASS TO HIDE SCROLLBAR WHEN LOADER IS ACTIVE */
-        body.no-scroll {
-            overflow: hidden;
         }
 
         /* --- 2. UI ANIMATIONS --- */
@@ -60,36 +44,23 @@
 
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
-            padding: 1rem 2rem; background: var(--text-primary); color: var(--bg-surface);
+            padding: 1rem 2rem; background: var(--text-primary); color: white;
             border-radius: 50px; font-weight: 600; transition: var(--transition-smooth);
             border: none; cursor: pointer; letter-spacing: 0.5px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); opacity: 0.9; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); background: black; }
 
         /* --- 4. NAVIGATION --- */
         nav {
             position: fixed; top: 0; left: 0; right: 0; padding: 1.25rem 0; z-index: 1000;
-            background: rgba(var(--bg-body), 0.7); backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            transition: background 0.3s ease;
+            background: rgba(250, 250, 250, 0.7); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
-        
-        .nav-right { display: flex; align-items: center; gap: 2rem; }
-        .nav-items a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-items a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         .nav-items a:hover { color: var(--text-primary); }
-
-        /* Theme Toggle Button */
-        .theme-toggle {
-            background: transparent; border: 1px solid var(--border);
-            color: var(--text-primary); cursor: pointer;
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            transition: var(--transition-smooth);
-        }
-        .theme-toggle:hover { background: var(--border); }
 
         /* --- 5. HERO & SECTIONS --- */
         .hero { padding-top: 180px; padding-bottom: 100px; text-align: center; }
@@ -123,6 +94,7 @@
             overflow: hidden;
             box-shadow: var(--shadow-float);
             aspect-ratio: 16/9;
+            /* F1 Variables */
             --f1-accent: #fcd700;
             --f1-highlight: #ea0a1e;
             --f1-ford-blue: #4aa1f3;
@@ -204,40 +176,34 @@
 
         /* --- 8. CALCULATOR --- */
         .calculator-wrapper {
-            background: var(--text-primary); color: var(--bg-surface); border-radius: var(--radius-lg);
+            background: var(--text-primary); color: white; border-radius: var(--radius-lg);
             padding: 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
-            margin-bottom: 4rem; position: relative; overflow: hidden; border: 1px solid var(--border);
+            margin-bottom: 4rem; position: relative; overflow: hidden;
         }
-        .calculator-wrapper input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(125,125,125,0.5); font-size: 3rem; color: var(--bg-surface); padding: 1rem 0; outline: none; }
+        .calculator-wrapper input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); font-size: 3rem; color: white; padding: 1rem 0; outline: none; }
         .big-number { font-size: 6rem; font-weight: 800; line-height: 1; background: linear-gradient(to bottom right, #ffffff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* --- 9. MODAL --- */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; pointer-events: none;
+            background: rgba(255,255,255,0.95); z-index: 2000; opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease; backdrop-filter: blur(5px); overflow-y: auto;
         }
         .modal-backdrop.active { opacity: 1; pointer-events: all; }
-        .modal-content { 
-            background: var(--bg-surface);
-            color: var(--text-primary);
-            max-width: 800px; margin: 4rem auto 8rem auto; padding: 0 2rem; opacity: 0; transform: translateY(50px); transition: 0.5s; 
-            border-radius: var(--radius-lg); padding-bottom: 2rem;
-            border: 1px solid var(--border);
-        }
+        .modal-content { max-width: 800px; margin: 4rem auto 8rem auto; padding: 0 2rem; opacity: 0; transform: translateY(50px); transition: 0.5s; }
         .modal-backdrop.active .modal-content { opacity: 1; transform: translateY(0); }
-        .close-modal { position: fixed; top: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border); cursor: pointer; font-size: 1.5rem; z-index: 2001; }
+        .close-modal { position: fixed; top: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer; font-size: 1.5rem; z-index: 2001; }
         
-        .article-hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; margin-top: 2rem; }
+        .article-hero-img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; }
         .article-text h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
-        .article-text p { font-size: 1.2rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 2rem; }
+        .article-text p { font-size: 1.2rem; line-height: 1.8; color: #374151; margin-bottom: 2rem; }
         .article-text h3 { margin-top: 3rem; margin-bottom: 1rem; font-size: 1.5rem; }
-        .article-text ul { margin-left: 1.5rem; margin-bottom: 2rem; line-height: 1.8; font-size: 1.2rem; color: var(--text-secondary); }
+        .article-text ul { margin-left: 1.5rem; margin-bottom: 2rem; line-height: 1.8; font-size: 1.2rem; color: #374151; }
 
         .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
 
-        /* --- 10. SECRET OVERLAY (LOADER) --- */
+        /* --- 10. SECRET OVERLAY --- */
         #secret-frame {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             border: none; z-index: 9999; background: white;
@@ -251,28 +217,15 @@
         }
     </style>
 </head>
-<script>
-    (function() {
-        const savedTheme = localStorage.getItem('wingflex-theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        }
-    })();
-</script>
 <body>
 
     <nav>
         <div class="container nav-content">
             <div class="logo"><div class="logo-dot"></div>WINGFLEX</div>
-            <div class="nav-right">
-                <div class="nav-items">
-                    <a href="#journal">Journal</a>
-                    <a href="#lab">Wind Tunnel</a>
-                    <a href="#about">About</a>
-                </div>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <span id="theme-icon">◑</span>
-                </button>
+            <div class="nav-items">
+                <a href="#journal">Journal</a>
+                <a href="#lab">Wind Tunnel</a>
+                <a href="#about">About</a>
             </div>
         </div>
     </nav>
@@ -280,7 +233,7 @@
     <header class="container hero">
         <h1>Bending the rules<br>of aerodynamics.</h1>
         <p>A deep dive into structural flexibility, load factors, and why modern planes are designed to act like giant springs.</p>
-        <button class="btn" onclick="triggerLoader()">Start Exploring</button>
+        <button class="btn" onclick="document.getElementById('journal').scrollIntoView()">Start Exploring</button>
         <div style="height: 60px;"></div>
         <div class="hero-visual">
             <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Wing Flex">
@@ -336,7 +289,7 @@
                     <label style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">Angle (Degrees)</label>
                     <input type="number" id="bankInput" placeholder="45" value="45">
                 </div>
-                <button class="btn" style="background: var(--bg-surface); color: var(--text-primary);" onclick="animateCalculation()">Calculate G-Load</button>
+                <button class="btn" style="background: white; color: black;" onclick="animateCalculation()">Calculate G-Load</button>
             </div>
             <div class="result-display" style="text-align: right;">
                 <div class="big-number" id="calcDisplay">1.41</div>
@@ -344,6 +297,7 @@
             </div>
         </div>
 
+        <!-- F1 GAME EMBED -->
         <div id="f1-game-root" class="reveal-on-scroll">
             
             <div id="f1-hud">
@@ -395,43 +349,6 @@
     <iframe id="secret-frame" src=""></iframe>
 
     <script>
-        // --- 0. THEME LOGIC (SAVES TO LOCAL STORAGE) ---
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            
-            if (current === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('wingflex-theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('wingflex-theme', 'dark');
-            }
-        }
-
-        // --- 0.5 LOADER / SCROLLBAR LOGIC ---
-        function triggerLoader() {
-            const frame = document.getElementById('secret-frame');
-            // Assuming loader.html exists in your folder
-            frame.src = 'loader.html'; 
-            frame.classList.add('active');
-            
-            // THIS LINE REMOVES THE SCROLLBAR
-            document.body.classList.add('no-scroll');
-            
-            // Optional: Auto close for demo purposes if loader.html doesn't close itself
-            // setTimeout(() => closeLoader(), 3000); 
-        }
-
-        function closeLoader() {
-            const frame = document.getElementById('secret-frame');
-            frame.classList.remove('active');
-            frame.src = '';
-            
-            // THIS LINE BRINGS THE SCROLLBAR BACK
-            document.body.classList.remove('no-scroll');
-        }
-
         // --- 1. GENERAL SCROLL OBSERVER ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -687,40 +604,58 @@
                 title: "Understanding Load Factor", 
                 tag: "NEWTONIAN PHYSICS",
                 image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&w=1200&q=80", 
-                content: `<p>Why a 60-degree turn makes your plane feel twice as heavy...</p>` 
+                content: `<p>When an aircraft turns, it must generate enough lift...</p>` 
             },
             { 
                 title: "The Ultimate Load Test", 
-                tag: "SAFETY PROTOCOLS",
+                tag: "STRUCTURAL SAFETY",
                 image: "https://images.unsplash.com/photo-1583070675712-421b44321683?ixlib=rb-4.0.3&w=1200&q=80", 
-                content: `<p>Wings are designed to handle 150% of the maximum load ever expected...</p>` 
+                content: `<p>Before a new aircraft type is certified...</p>` 
             }
         ];
-
-        const modal = document.getElementById('modalBackdrop');
+        
+        const backdrop = document.getElementById('modalBackdrop');
         const mImage = document.getElementById('mImage');
         const mTitle = document.getElementById('mTitle');
         const mTag = document.getElementById('mTag');
         const mBody = document.getElementById('mBody');
 
         function openModal(index) {
-            const art = articles[index];
-            mImage.src = art.image;
-            mTitle.textContent = art.title;
-            mTag.textContent = art.tag;
-            mBody.innerHTML = art.content;
-            modal.classList.add('active');
+            mImage.src = articles[index].image;
+            mTitle.innerText = articles[index].title;
+            mTag.innerText = articles[index].tag;
+            mBody.innerHTML = articles[index].content;
+            backdrop.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
+            backdrop.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
+        backdrop.addEventListener('click', (e) => { if(e.target===backdrop) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    </script>
+    
+    <script>
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key.toLowerCase() === 'g') { window.open('geeplus.png', '_blank'); }
+        });
+    </script>
+    
+    <script>
+        const secretCode = 'qwerty';
+        let keyHistory = [];
+        const secretFrame = document.getElementById('secret-frame');
 
-        // Close when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            keyHistory.push(e.key.toLowerCase());
+            if (keyHistory.length > secretCode.length) { keyHistory.shift(); }
+            if (keyHistory.join('') === secretCode) {
+                secretFrame.src = 'Education/Loader.html';
+                secretFrame.classList.add('active');
+            }
         });
     </script>
 </body>
