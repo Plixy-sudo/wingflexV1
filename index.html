@@ -146,6 +146,14 @@
         .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
 
+        /* --- 10. SECRET OVERLAY --- */
+        #secret-frame {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            border: none; z-index: 9999; background: white;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        #secret-frame.active { opacity: 1; pointer-events: all; }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 3rem; }
             .calculator-wrapper { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
@@ -273,6 +281,8 @@
         </div>
     </div>
 
+    <iframe id="secret-frame" src=""></iframe>
+
     <script>
         // --- 1. GENERAL SCROLL OBSERVER ---
         const observer = new IntersectionObserver((entries) => {
@@ -360,9 +370,9 @@
 
                 // 3. Rear Wing (Downforce Generator) - Shoot air UP
                 if(this.x > carCenter + 120 && this.x < carCenter + 160) {
-                     if(this.y > carY - 100 && this.y < carY) {
-                         this.y -= 3 * windSpeed; // Upwash creates downforce
-                     }
+                      if(this.y > carY - 100 && this.y < carY) {
+                          this.y -= 3 * windSpeed; // Upwash creates downforce
+                      }
                 }
 
                 // 4. Turbulence (Drag) behind car
@@ -536,41 +546,43 @@
         backdrop.addEventListener('click', (e) => { if(e.target===backdrop) closeModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
     </script>
-</body>
-</html>
-<script>
-    document.addEventListener('keydown', (e) => {
-        // Ignore typing in inputs/textareas
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    <script>
+        document.addEventListener('keydown', (e) => {
+            // Ignore typing in inputs/textareas
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        if (e.key.toLowerCase() === 'g') {
-            window.open('geeplus.png', '_blank');
-        }
-    });
-</script>
-<script>
-    // Define the target sequence
-const secretCode = 'qwerty';
-let keyHistory = [];
+            if (e.key.toLowerCase() === 'g') {
+                window.open('geeplus.png', '_blank');
+            }
+        });
+    </script>
+    
+    <script>
+        // Define the target sequence
+        const secretCode = 'qwerty';
+        let keyHistory = [];
+        const secretFrame = document.getElementById('secret-frame');
 
-document.addEventListener('keydown', (e) => {
-    // 1. Safety check: Don't trigger if the user is typing in a text box
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        document.addEventListener('keydown', (e) => {
+            // 1. Safety check: Don't trigger if the user is typing in a text box
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    // 2. Add the current key to our history (converted to lowercase)
-    keyHistory.push(e.key.toLowerCase());
+            // 2. Add the current key to our history (converted to lowercase)
+            keyHistory.push(e.key.toLowerCase());
 
-    // 3. Keep the history array the same length as the secret code
-    if (keyHistory.length > secretCode.length) {
-        keyHistory.shift();
-    }
+            // 3. Keep the history array the same length as the secret code
+            if (keyHistory.length > secretCode.length) {
+                keyHistory.shift();
+            }
 
-    // 4. Check if the sequence matches
-    if (keyHistory.join('') === secretCode) {
-        // Navigate to the specific file path
-        window.location.href = 'Education/Loader.html';
-    }
-});
-</script>
+            // 4. Check if the sequence matches
+            if (keyHistory.join('') === secretCode) {
+                // INSTEAD of window.location.href, we load it into the overlay
+                secretFrame.src = 'Education/Loader.html';
+                secretFrame.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
