@@ -1,6 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Input Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background-color: #f4f4f9;
+        }
+
+        /* Container to hold the input and the button */
+        .password-container {
+            position: relative;
+            max-width: 300px;
+        }
+
+        /* The actual input field */
+        #myPassword {
+            width: 100%;
+            padding: 10px;
+            padding-right: 50px; /* Make room for the button */
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* The toggle button (Eye icon) */
+        .toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        .toggle-btn:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Login</h3>
+    
+    <div class="password-container">
+        <input type="password" id="myPassword" placeholder="Enter Password">
+        <button type="button" id="toggleBtn" class="toggle-btn" onclick="togglePassword()">Show</button>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById("myPassword");
+            var toggleButton = document.getElementById("toggleBtn");
+
+            // Check if the type is password
+            if (passwordInput.type === "password") {
+                // Switch to text (shows the password)
+                passwordInput.type = "text";
+                toggleButton.textContent = "Hide";
+            } else {
+                // Switch back to password (hides it)
+                passwordInput.type = "password";
+                toggleButton.textContent = "Show";
+            }
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wingflex</title>
