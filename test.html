@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AERO // PROTOCOL</title>
+    <title>RB22 // AERO PROTOCOL</title>
     <style>
         /* MINIMALIST DESIGN SYSTEM */
         :root {
-            --bg: #050505;
-            --ui-bg: rgba(15, 20, 30, 0.85);
-            --accent: #ffeb3b; /* Yellow for Red Bull accent */
-            --highlight: #ff3333; /* Red */
+            --bg: #020408;
+            --ui-bg: rgba(10, 15, 30, 0.85);
+            --accent: #fcd700; /* Red Bull Yellow */
+            --highlight: #ea0a1e; /* Red Bull Red */
+            --ford-blue: #4aa1f3; /* Ford Blue */
             --text: #e0e0e0;
             --font: 'Segoe UI Mono', 'Courier New', Courier, monospace;
         }
@@ -41,13 +42,14 @@
         .metric, .controls {
             background: var(--ui-bg);
             padding: 12px 18px;
-            border-left: 3px solid var(--highlight);
+            border-left: 3px solid var(--ford-blue);
             margin-bottom: 10px;
             backdrop-filter: blur(8px);
             min-width: 200px;
             pointer-events: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             border-radius: 0 4px 4px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
         .metric label, .controls label {
@@ -76,7 +78,7 @@
         .control-btn {
             flex: 1;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(74, 161, 243, 0.3); /* Ford blue border */
             color: var(--text);
             font-family: var(--font);
             font-size: 10px;
@@ -88,8 +90,8 @@
         }
 
         .control-btn:hover {
-            background: var(--highlight);
-            border-color: var(--highlight);
+            background: var(--ford-blue);
+            border-color: var(--ford-blue);
             color: #fff;
         }
 
@@ -143,7 +145,7 @@
         #overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 8, 0.95);
+            background: rgba(2, 4, 8, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -160,7 +162,7 @@
             margin: 0 0 20px 0;
             color: #fff;
             text-transform: uppercase;
-            border-bottom: 1px solid var(--highlight);
+            border-bottom: 1px solid var(--ford-blue);
             padding-bottom: 20px;
         }
 
@@ -188,9 +190,9 @@
         }
 
         .big-btn:hover {
-            border-color: var(--highlight);
-            background: rgba(255, 51, 51, 0.1);
-            box-shadow: 0 0 30px rgba(255, 51, 51, 0.2);
+            border-color: var(--ford-blue);
+            background: rgba(74, 161, 243, 0.1);
+            box-shadow: 0 0 30px rgba(74, 161, 243, 0.2);
         }
 
         .hidden { opacity: 0; pointer-events: none; }
@@ -209,11 +211,11 @@
             <div class="value" id="score-val">0</div>
         </div>
         <div class="metric">
-            <label>Flow Velocity</label>
+            <label>Tunnel Speed</label>
             <div class="value"><span id="speed-val">0</span> <span style="font-size:12px; color:#666;">mph</span></div>
         </div>
         <div class="controls">
-            <label>Tunnel Speed (+/- 10)</label>
+            <label>Wind Velocity (+/- 10)</label>
             <div class="btn-group">
                 <button class="control-btn" id="btn-decel">DECEL</button>
                 <button class="control-btn" id="btn-accel">ACCEL</button>
@@ -222,18 +224,18 @@
     </div>
 
     <div id="heat-container">
-        <div id="heat-label">THERMAL LIMIT REACHED</div>
+        <div id="heat-label">POWER UNIT THERMAL LIMIT</div>
         <div id="heat-bar-bg"><div id="heat-bar-fill"></div></div>
     </div>
 
     <div id="overlay" class="visible">
-        <h1 id="title">RB26 // AERO</h1>
+        <h1 id="title">RB22 FORD</h1>
         <p id="desc">
-            <strong>TEST PROTOCOL 2026:</strong><br><br>
-            Drag the prototype to maintain position within the<br>
-            <strong>OPTIMAL FLOW SENSOR ARRAY</strong> (Blue Zone).<br><br>
-            Adjust wind velocity to capture data points.<br>
-            Deviating from the zone causes power unit overheat.
+            <strong>2026 REGULATIONS PROTOCOL:</strong><br><br>
+            Drag the <strong>RB22</strong> prototype to maintain position within the<br>
+            <strong>OPTIMAL FLOW ZONE</strong> (Blue Laser Array).<br><br>
+            Manage airflow stability to capture data points.<br>
+            Deviating from the zone causes overheating.
         </p>
         <button id="start-btn" class="big-btn">Initialize</button>
     </div>
@@ -290,28 +292,20 @@
      * VISUALS: BACKGROUND GRID
      */
     function drawGrid() {
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+        ctx.strokeStyle = 'rgba(74, 161, 243, 0.03)'; // Faint Ford Blue grid
         ctx.lineWidth = 1;
         const gridSize = 50;
 
-        // Vertical lines
         for(let x = 0; x <= width; x += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, height);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
         }
-        // Horizontal lines
         for(let y = 0; y <= height; y += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(width, y);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
         }
     }
 
     /**
-     * PHYSICS: SMOKE STREAMS
+     * PHYSICS: ADVANCED STREAMLINES
      */
     class Particle {
         constructor() { this.reset(true); }
@@ -323,49 +317,71 @@
             this.vy = 0;
             this.baseSpeed = Math.random() * 5; 
             this.alpha = Math.random() * 0.3 + 0.1;
-            // Trail length factor
-            this.trailLength = Math.random() * 20 + 10;
         }
 
         update() {
             let targetVx = windSpeed + this.baseSpeed;
             let targetVy = 0;
 
-            const cx = car.x + car.w/2;
-            const cy = car.y + car.h/2;
-            const dx = this.x - cx;
-            const dy = this.y - cy;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            
-            // Aerodynamic warping
-            const radius = car.w * 0.55; 
-            if (dist < radius) {
-                const force = (radius - dist) / radius;
-                const angle = Math.atan2(dy, dx);
-                targetVy += Math.sin(angle) * force * windSpeed * 2.8; 
-                if (dx < 0) targetVx -= Math.cos(angle) * force * windSpeed * 0.9;
-                else targetVx += force * windSpeed * 0.6;
-            }
+            // Physics relative to car coordinates
+            const relX = this.x - car.x;
+            const relY = this.y - car.y; 
 
-            // Wake turbulence
-            if (dx > 0 && dx < car.w * 3 && Math.abs(dy) < car.h * 1.2) {
-                if(Math.random() > 0.9) {
-                    targetVy += (Math.random() - 0.5) * windSpeed * 0.5;
+            // --- PROFILE BASED AERODYNAMICS (2026 SPEC) ---
+            if (relX > -100 && relX < car.w + 150) {
+                // 1. DEFINE SURFACE PROFILE (Lower, Sleeker 2026 Regs)
+                let surfaceY = 100; 
+
+                if (relX < 0) surfaceY = 48; 
+                else if (relX >= 0 && relX < 90) surfaceY = 48 - (relX/90) * 20; // Lower nose
+                else if (relX >= 90 && relX < 140) surfaceY = 28; // Halo area
+                else if (relX >= 140 && relX < 235) surfaceY = 20 + ((relX - 140) / 95) * 25; // Cannon engine cover
+                else if (relX >= 235) surfaceY = 20; 
+
+                // 2. FLOW OVER THE TOP
+                const buffer = 15; 
+                const floorY = 55;
+
+                if (relY > surfaceY - buffer && relY < floorY) {
+                    const depth = relY - (surfaceY - buffer);
+                    if (depth > 0) {
+                        const pushForce = depth / 30; 
+                        targetVy -= pushForce * windSpeed * 1.5; 
+                        targetVx += pushForce * windSpeed * 0.5;
+                    }
                 }
-                targetVx *= 0.98; 
+
+                // 3. UNDERFLOOR / VENTURI
+                if (relY >= floorY && relY < floorY + 15 && relX > 20 && relX < 210) {
+                    targetVx += windSpeed * 0.45; // Faster underfloor for 2026
+                }
+
+                // 4. REAR WING UPWASH (Active Aero Z-Mode)
+                if (relX > 240 && relX < 450) {
+                    if (relY < 40 && relY > -30) {
+                        targetVy -= windSpeed * 0.5 * (1 - (relX-240)/210); 
+                        targetVx *= 0.95;
+                    }
+                }
+                
+                // 5. NOSE DOWNWASH
+                if (relX > -20 && relX < 10 && relY > 45) {
+                    targetVy += windSpeed * 0.2;
+                }
             }
 
-            this.vx += (targetVx - this.vx) * 0.15;
-            this.vy += (targetVy - this.vy) * 0.15;
+            this.vx += (targetVx - this.vx) * 0.2;
+            this.vy += (targetVy - this.vy) * 0.2;
             this.x += this.vx;
             this.y += this.vy;
 
-            // Colors - based on Zone and Car Proximity
+            // Visual Colors
             const inZone = (car.y >= zone.y && car.y + car.h <= zone.y + zone.h);
-            const nearCar = this.x > car.x - 50 && this.x < car.x + car.w + 100 && Math.abs(this.y - cy) < 120;
+            const nearCar = relX > -50 && relX < 350 && Math.abs(relY - 30) < 60;
             
             if (nearCar) {
-                this.color = inZone ? `rgba(100, 220, 255, ${this.alpha})` : `rgba(255, 80, 80, ${this.alpha})`;
+                // Ford Blue streams for good flow, Red for bad
+                this.color = inZone ? `rgba(74, 161, 243, ${this.alpha})` : `rgba(234, 10, 30, ${this.alpha})`;
             } else {
                 this.color = `rgba(200, 210, 220, ${this.alpha * 0.6})`;
             }
@@ -378,15 +394,13 @@
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(this.x, this.y);
-            // Draw a long trail backwards based on velocity to simulate a stream
-            // The 3.0 multiplier creates the "long stream" look
             ctx.lineTo(this.x - (this.vx * 3.0), this.y - (this.vy * 3.0));
             ctx.stroke();
         }
     }
 
     /**
-     * RENDER: RB26 2026 CONCEPT CAR
+     * RENDER: RED BULL FORD RB22 (2026)
      */
     function drawCar() {
         ctx.save();
@@ -395,84 +409,104 @@
         // Heat warning glow
         if (heat > 0) {
             ctx.shadowBlur = heat * 0.8;
-            ctx.shadowColor = '#ff3333';
+            ctx.shadowColor = '#ea0a1e';
         }
 
-        // --- RB26 LIVERY COLORS ---
-        const colorPrimary = '#061939'; // Matte Navy
-        const colorAccent = '#fcd700'; // Yellow (Nose/Airbox)
-        const colorHighlight = '#ff3333'; // Red Stripe
+        // --- COLORS ---
+        const colorPrimary = '#000814'; // Glossy Midnight Blue/Black
+        const colorFord = '#4aa1f3'; // Ford Blue
+        const colorYellow = '#fcd700'; // Yellow
+        const colorRed = '#ea0a1e'; // Red
 
-        // 1. MAIN BODY (2026 Concept: Shorter, Active Aero style)
+        // 1. MAIN BODY SHAPE (2026 Regs)
         ctx.fillStyle = colorPrimary;
         ctx.beginPath();
-        // Pointy Nose (2026 style)
-        ctx.moveTo(0, 45); 
-        ctx.lineTo(80, 42); 
-        // Chassis rise
-        ctx.lineTo(120, 28); 
-        // Integrated Roll Hoop
-        ctx.lineTo(150, 25); 
-        // Compact Engine Cover
-        ctx.bezierCurveTo(190, 25, 210, 32, 225, 42); 
-        // Rear Structure
-        ctx.lineTo(235, 20); // Pylon
-        ctx.lineTo(255, 18); // Z-Wing top element
-        ctx.lineTo(255, 52); // Rear Endplate
-        ctx.lineTo(210, 55); // Diffuser
-        ctx.lineTo(60, 55); // Floor
+        ctx.moveTo(0, 48); // Nose tip
+        ctx.bezierCurveTo(30, 46, 60, 40, 90, 38); 
+        ctx.lineTo(130, 30); 
+        ctx.lineTo(155, 22); // Airbox
+        ctx.bezierCurveTo(190, 22, 220, 28, 235, 45); // Engine Cover
+        ctx.lineTo(240, 25); 
+        ctx.lineTo(260, 22); // Rear wing top
+        ctx.lineTo(260, 50); 
+        ctx.lineTo(220, 55); 
+        ctx.lineTo(60, 55); 
         ctx.closePath();
         ctx.fill();
 
-        // 2. LIVERY: YELLOW ACCENTS
-        ctx.fillStyle = colorAccent;
-        // Nose Tip
+        // 2. JACQUARD PATTERN / FORD BLUE STREAKS
+        ctx.fillStyle = colorFord;
+        ctx.globalAlpha = 0.2;
         ctx.beginPath();
-        ctx.moveTo(0, 45); ctx.lineTo(20, 44); ctx.lineTo(20, 50); ctx.fill();
-        // Airbox Bull
-        ctx.beginPath(); ctx.arc(155, 30, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.moveTo(140, 40); ctx.lineTo(180, 50); ctx.lineTo(120, 50);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
 
-        // 3. RED BULL STRIPE
-        ctx.strokeStyle = colorHighlight;
-        ctx.lineWidth = 2;
+        // 3. FORD BRANDING (Engine Cover)
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 6px Arial';
+        ctx.fillText("FORD", 195, 38);
+        ctx.fillStyle = colorFord;
+        ctx.fillRect(190, 32, 25, 1);
+
+        // 4. LIVERY: YELLOW NOSE TIP
+        ctx.fillStyle = colorYellow;
         ctx.beginPath();
-        ctx.moveTo(130, 48); ctx.lineTo(200, 48);
-        ctx.stroke();
-
-        // 4. FRONT WING (Simplified, futuristic)
-        ctx.fillStyle = colorPrimary;
-        ctx.fillRect(5, 48, 50, 3);
-        ctx.fillStyle = colorHighlight; // Accent
-        ctx.fillRect(5, 48, 50, 1);
-
-        // 5. REAR WING DETAIL (Active Aero Flap)
-        ctx.fillStyle = '#1a2b4d';
-        ctx.beginPath();
-        ctx.moveTo(235, 20); ctx.lineTo(255, 18); ctx.lineTo(255, 28); ctx.lineTo(238, 28);
+        ctx.moveTo(0, 48);
+        ctx.lineTo(20, 46);
+        ctx.lineTo(20, 50);
         ctx.fill();
 
-        // 6. HALO
+        // 5. LIVERY: HERITAGE WHITE/YELLOW CIRCLE (Bull Sun)
+        ctx.fillStyle = '#fff'; // Heritage white base for logo
+        ctx.beginPath(); ctx.arc(160, 30, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = colorYellow; // Sun
+        ctx.beginPath(); ctx.arc(160, 30, 6, 0, Math.PI * 2); ctx.fill();
+
+        // 6. LIVERY: RED STRIPING
+        ctx.strokeStyle = colorRed;
+        ctx.lineWidth = 2;
+        // Top line
+        ctx.beginPath(); ctx.moveTo(165, 25); ctx.lineTo(220, 30); ctx.stroke();
+        
+        // 7. FRONT WING (In-wash Concept)
+        ctx.fillStyle = colorPrimary;
+        ctx.beginPath();
+        ctx.moveTo(5, 48); ctx.lineTo(45, 45); ctx.lineTo(45, 50); ctx.lineTo(5, 52);
+        ctx.fill();
+        // Red Accent
+        ctx.fillStyle = colorRed;
+        ctx.fillRect(5, 48, 40, 1);
+
+        // 8. REAR WING (Z-Mode)
+        ctx.fillStyle = colorPrimary;
+        ctx.beginPath();
+        ctx.moveTo(240, 25); ctx.lineTo(260, 22); ctx.lineTo(260, 30); ctx.lineTo(245, 32);
+        ctx.fill();
+        // Ford Blue Endplate inner
+        ctx.fillStyle = colorFord;
+        ctx.fillRect(258, 22, 2, 28);
+
+        // 9. HALO
         ctx.strokeStyle = colorPrimary;
         ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(135, 28, 12, Math.PI, 0);
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(140, 30, 10, Math.PI, 0); ctx.stroke();
 
-        // 7. WHEELS (18" with Aero Covers)
+        // 10. WHEELS (18" with Covers)
         ctx.fillStyle = '#111';
         // Front
-        ctx.beginPath(); ctx.arc(45, 52, 22, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(45, 52, 21, 0, Math.PI*2); ctx.fill();
         // Rear
-        ctx.beginPath(); ctx.arc(200, 52, 22, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(200, 52, 21, 0, Math.PI*2); ctx.fill();
 
-        // Wheel Rim Accent
-        ctx.strokeStyle = '#444';
+        // Wheel Rim Accent (Ford Blue Ring)
+        ctx.strokeStyle = colorFord;
         ctx.lineWidth = 1;
         ctx.beginPath(); ctx.arc(45, 52, 16, 0, Math.PI*2); ctx.stroke();
         ctx.beginPath(); ctx.arc(200, 52, 16, 0, Math.PI*2); ctx.stroke();
         
-        // Center Nut
-        ctx.fillStyle = colorAccent;
+        // Nut
+        ctx.fillStyle = colorRed;
         ctx.beginPath(); ctx.arc(45, 52, 3, 0, Math.PI*2); ctx.fill();
         ctx.beginPath(); ctx.arc(200, 52, 3, 0, Math.PI*2); ctx.fill();
 
@@ -481,25 +515,18 @@
 
     function drawZone() {
         // Sensor Array Look
-        ctx.fillStyle = 'rgba(60, 100, 255, 0.04)'; // Very faint blue
+        ctx.fillStyle = 'rgba(74, 161, 243, 0.04)'; // Ford Blue Tint
         ctx.fillRect(0, zone.y, width, zone.h);
         
         // Laser Lines
-        ctx.strokeStyle = 'rgba(60, 150, 255, 0.4)';
+        ctx.strokeStyle = 'rgba(74, 161, 243, 0.4)';
         ctx.lineWidth = 1;
         
-        // Top line
-        ctx.beginPath();
-        ctx.moveTo(0, zone.y); ctx.lineTo(width, zone.y);
-        ctx.stroke();
-        
-        // Bottom line
-        ctx.beginPath();
-        ctx.moveTo(0, zone.y + zone.h); ctx.lineTo(width, zone.y + zone.h);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, zone.y); ctx.lineTo(width, zone.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, zone.y + zone.h); ctx.lineTo(width, zone.y + zone.h); ctx.stroke();
 
         // Technical Label
-        ctx.fillStyle = 'rgba(60, 150, 255, 0.8)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.font = '9px Segoe UI Mono';
         ctx.fillText("SENSOR ARRAY ACTIVE // CALIBRATION ZONE", 20, zone.y + 12);
     }
@@ -514,7 +541,7 @@
         particles = [];
         resize();
         
-        // Create 600 smoke particles for denser streams
+        // Create 600 smoke particles
         for(let i=0; i<600; i++) particles.push(new Particle());
         
         isPlaying = true;
@@ -526,8 +553,8 @@
     function gameOver() {
         isPlaying = false;
         title.innerText = "CRITICAL FAILURE";
-        title.style.color = "#ff3333";
-        title.style.borderBottomColor = "#ff3333";
+        title.style.color = "#ea0a1e";
+        title.style.borderBottomColor = "#ea0a1e";
         desc.innerHTML = `Power Unit Thermal Limit Exceeded.<br><br>Data Captured: <strong style="color:#fff; font-size:1.5em">${Math.floor(score)}</strong>`;
         btnStart.innerText = "RESET SYSTEM";
         overlay.classList.remove('hidden');
@@ -557,9 +584,9 @@
         if (heat > 0) {
             uiHeatLabel.style.opacity = Math.min(1, heat / 50);
             if (heat > 80) {
-                 uiHeatFill.style.backgroundColor = (Math.floor(Date.now() / 100) % 2 === 0) ? '#ff0000' : '#ff5555';
+                 uiHeatFill.style.backgroundColor = (Math.floor(Date.now() / 100) % 2 === 0) ? '#ff0000' : '#ea0a1e';
             } else {
-                uiHeatFill.style.backgroundColor = '#ff3333';
+                uiHeatFill.style.backgroundColor = '#ea0a1e';
             }
         } else {
             uiHeatLabel.style.opacity = 0;
@@ -569,12 +596,10 @@
     function animate() {
         if (!isPlaying) return;
 
-        // Clear without fade for crisp lines, or slight fade for motion blur
-        // Using slight fade to keep trails smooth
-        ctx.fillStyle = 'rgba(5, 5, 8, 0.4)'; 
+        ctx.fillStyle = 'rgba(2, 4, 8, 0.4)'; 
         ctx.fillRect(0, 0, width, height);
 
-        drawGrid(); // Background grid
+        drawGrid();
         updateGame();
         drawZone();
 
