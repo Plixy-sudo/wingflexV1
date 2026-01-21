@@ -1,6 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secured Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: white;
+            color: black;
+        }
+
+        /* --- THE LOCK SCREEN --- */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            
+            /* Centers the login box */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: #f0f0f0;
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #27ae60;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #2ecc71;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 10px;
+            display: none; 
+        }
+
+        /* --- THE SECRET CONTENT --- */
+        #secret-content {
+            display: none; /* Hidden by default */
+            padding: 50px;
+            /* CHANGED: Text is now on the left, not centered */
+            text-align: left; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>🔒 Restricted Access</h2>
+            <p>Enter password to unlock content</p>
+            <input type="password" id="passInput" placeholder="Password...">
+            <br>
+            <button onclick="checkPassword()">Unlock</button>
+            <p id="error" class="error-msg">Wrong Password!</p>
+        </div>
+    </div>
+
+    <div id="secret-content">
+        <h1>Welcome</h1>
+        <p>This is your hidden content. It is now aligned to the left side of the page, just like a normal website.</p>
+        <p>You can add more text, images, or links here.</p>
+        <img src="https://via.placeholder.com/400x200" alt="Secret Image">
+    </div>
+
+    <script>
+        // LISTEN FOR ENTER KEY
+        var inputField = document.getElementById("passInput");
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkPassword();
+            }
+        });
+
+        function checkPassword() {
+            var input = document.getElementById("passInput").value;
+            var overlay = document.getElementById("login-overlay");
+            var content = document.getElementById("secret-content");
+            var error = document.getElementById("error");
+
+            // --- CHANGE THE PASSWORD HERE ---
+            var correctPassword = "1234"; 
+
+            if (input === correctPassword) {
+                overlay.style.display = "none";
+                content.style.display = "block";
+            } else {
+                error.style.display = "block";
+                document.getElementById("passInput").value = "";
+                document.getElementById("passInput").focus();
+            }
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wingflex</title>
